@@ -10,11 +10,11 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-// Vibree Custom Colors
-val VibreeBlack = Color(0xFF0A0A0E)
-val VibreeDarkPurple = Color(0xFF140024)
-val VibreeNeonPink = Color(0xFFFF007F)
-val VibreeNeonPurple = Color(0xFFBC13FE)
-val VibreeGlass = Color(0x22FFFFFF)
-val TextWhite = Color(0xFFEEEEEE)
-val TextGray = Color(0xFFAAAAAA)
+// Vibree Custom Colors - Mindful Palette
+val VibreeBlack = Color(0xFF0F172A) // Deep Slate Blue
+val VibreeDarkPurple = Color(0xFF1E293B) // Slightly lighter slate for surfaces
+val VibreeNeonPink = Color(0xFF2DD4BF) // Soft Teal (Replacing Neon Pink)
+val VibreeNeonPurple = Color(0xFF818CF8) // Soft Indigo (Replacing Neon Purple)
+val VibreeGlass = Color(0x0DFFFFFF) // 5% White opacity
+val TextWhite = Color(0xFFF1F5F9)
+val TextGray = Color(0xFF94A3B8)

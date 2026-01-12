@@ -8,15 +8,24 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
-import com.example.wearablecollector.ui.screens.DashboardScreen
-import com.example.wearablecollector.ui.screens.MatchScreen
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.example.wearablecollector.ui.screens.*
 import com.example.wearablecollector.ui.theme.VibreeTheme
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
@@ -28,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
     // Simple navigation state
     private enum class Screen {
-        DASHBOARD, MATCH
+        DASHBOARD, MATCH, SEARCH, PROFILE, VITALS, ACTIVITY
     }
 
     private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
@@ -61,29 +70,124 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             VibreeTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.background
-                ) {
-                    var currentScreen by remember { mutableStateOf(Screen.DASHBOARD) }
-                    
-                    // Observe LiveData from Repository
-                    val status by SensorDataRepository.status.observeAsState("Disconnected")
-                    val heartRate by SensorDataRepository.heartRate.observeAsState("0")
-                    val hrv by SensorDataRepository.hrv.observeAsState("0")
-                    
-                    when (currentScreen) {
-                        Screen.DASHBOARD -> {
-                            // We can pass data to Dashboard logic here
-                            // For now using the static "Resonant" but triggering animations with HR could be next
-                            DashboardScreen(
+                // Navigation State
+                var currentScreen by remember { mutableStateOf(Screen.DASHBOARD) }
+
+                // Observe LiveData from Repository (keeping existing logic)
+                val status by SensorDataRepository.status.observeAsState("Disconnected")
+                val heartRate by SensorDataRepository.heartRate.observeAsState("0")
+                val hrv by SensorDataRepository.hrv.observeAsState("0")
+
+                Scaffold(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    topBar = {
+                        TopAppBar(
+                            title = { 
+                                Text(
+                                    text = when(currentScreen) {
+                                        Screen.DASHBOARD -> "Dashboard"
+                                        Screen.SEARCH -> "Search"
+                                        Screen.PROFILE -> "Profile"
+                                        Screen.MATCH -> "Connections"
+                                        Screen.VITALS -> "Vitals"
+                                        Screen.ACTIVITY -> "Activity"
+                                    },
+                                    color = Color.White
+                                ) 
+                            },
+                            actions = {
+                                IconButton(onClick = { currentScreen = Screen.PROFILE }) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                            .background(Color.Gray, CircleShape)
+                                            .border(1.dp, com.example.wearablecollector.ui.theme.VibreeNeonPink, CircleShape)
+                                    )
+                                }
+                            },
+                            colors = TopAppBarDefaults.smallTopAppBarColors(
+                                containerColor = Color.Transparent,
+                                titleContentColor = Color.White
+                            )
+                        )
+                    },
+                    bottomBar = {
+                        // Hide bottom bar on Match screen if desired, or keep it. 
+                        // HTML design shows bottom bar on all screens except maybe match? 
+                        // HTML Match screen has back button in header, but let's keep bottom nav for consistency unless requested.
+                        if (currentScreen != Screen.MATCH) {
+                            NavigationBar(
+                                containerColor = com.example.wearablecollector.ui.theme.VibreeBlack.copy(alpha = 0.95f),
+                                contentColor = com.example.wearablecollector.ui.theme.VibreeNeonPink
+                            ) {
+                                NavigationBarItem(
+                                    icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+                                    label = { Text("Home") },
+                                    selected = currentScreen == Screen.DASHBOARD,
+                                    onClick = { currentScreen = Screen.DASHBOARD },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
+                                        selectedTextColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
+                                        unselectedIconColor = Color.Gray,
+                                        unselectedTextColor = Color.Gray,
+                                        indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple
+                                    )
+                                )
+                                NavigationBarItem(
+                                    icon = { Icon(Icons.Filled.Search, contentDescription = "Search") },
+                                    label = { Text("Search") },
+                                    selected = currentScreen == Screen.SEARCH,
+                                    onClick = { currentScreen = Screen.SEARCH },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
+                                        selectedTextColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
+                                        unselectedIconColor = Color.Gray,
+                                        unselectedTextColor = Color.Gray,
+                                        indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple
+                                    )
+                                )
+                                NavigationBarItem(
+                                    icon = { Icon(Icons.Filled.Favorite, contentDescription = "Vitals") },
+                                    label = { Text("Vitals") },
+                                    selected = currentScreen == Screen.VITALS,
+                                    onClick = { currentScreen = Screen.VITALS },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
+                                        selectedTextColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
+                                        unselectedIconColor = Color.Gray,
+                                        unselectedTextColor = Color.Gray,
+                                        indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple
+                                    )
+                                )
+                                NavigationBarItem(
+                                    icon = { Icon(Icons.Filled.List, contentDescription = "Activity") },
+                                    label = { Text("Activity") },
+                                    selected = currentScreen == Screen.ACTIVITY,
+                                    onClick = { currentScreen = Screen.ACTIVITY },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
+                                        selectedTextColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
+                                        unselectedIconColor = Color.Gray,
+                                        unselectedTextColor = Color.Gray,
+                                        indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple
+                                    )
+                                )
+                            }
+                        }
+                    }
+                ) { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        when (currentScreen) {
+                            Screen.DASHBOARD -> DashboardScreen(
                                 onNavigateToMatch = { currentScreen = Screen.MATCH }
                             )
-                        }
-                        Screen.MATCH -> {
-                            MatchScreen(
+                            Screen.SEARCH -> SearchScreen()
+                            Screen.PROFILE -> ProfileScreen()
+                            Screen.MATCH -> MatchScreen(
                                 onBack = { currentScreen = Screen.DASHBOARD }
                             )
+                            Screen.VITALS -> PlaceholderScreen("Vitals")
+                            Screen.ACTIVITY -> PlaceholderScreen("Activity")
                         }
                     }
                 }
