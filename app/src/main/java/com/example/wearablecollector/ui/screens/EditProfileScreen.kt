@@ -116,7 +116,6 @@ fun EditProfileScreen(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Name") },
-                modifier = Modifier.fillMaxWidth(),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -127,7 +126,6 @@ fun EditProfileScreen(
                 value = gender,
                 onValueChange = { gender = it },
                 label = { Text("Gender (e.g. Male, Female, Other)") },
-                modifier = Modifier.fillMaxWidth(),
                 modifier = Modifier.fillMaxWidth()
             )
 
