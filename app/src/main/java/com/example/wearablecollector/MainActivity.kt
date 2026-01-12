@@ -1,42 +1,40 @@
 package com.example.wearablecollector
 
 import android.Manifest
+import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.bluetooth.BluetoothDevice
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import com.example.wearablecollector.ui.screens.DashboardScreen
+import com.example.wearablecollector.ui.screens.MatchScreen
+import com.example.wearablecollector.ui.theme.VibreeTheme
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     private lateinit var bleManager: BleManager
-    private lateinit var tvStatus: TextView
-    private lateinit var tvHeartRate: TextView
-    private lateinit var tvHrv: TextView
-    private lateinit var tvGsr: TextView
-    private lateinit var tvEda: TextView
-    private lateinit var btnScan: Button
-    private lateinit var btnQrScan: Button
-    private lateinit var btnStop: Button
-    private lateinit var lvDevices: ListView
-    private lateinit var deviceAdapter: ArrayAdapter<String>
     private val scannedDevicesList = mutableListOf<BluetoothDevice>()
+
+    // Simple navigation state
+    private enum class Screen {
+        DASHBOARD, MATCH
+    }
 
     private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
         if (result.contents != null) {
             val scannedContent = result.contents
             Toast.makeText(this, "Scanned: $scannedContent", Toast.LENGTH_LONG).show()
-            // Basic simplistic MAC address check (format XX:XX:XX:XX:XX:XX)
-            // In reality, might need more complex parsing depending on what the QR code actually holds
             if (scannedContent.matches(Regex("([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}"))) {
                  bleManager.connect(scannedContent)
             } else {
@@ -57,88 +55,39 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        tvStatus = findViewById(R.id.tvStatus)
-        tvHeartRate = findViewById(R.id.tvHeartRate)
-        tvHrv = findViewById(R.id.tvHrv)
-        tvGsr = findViewById(R.id.tvGsr)
-        tvEda = findViewById(R.id.tvEda)
-        btnScan = findViewById(R.id.btnScan)
-        btnQrScan = findViewById(R.id.btnQrScan)
-        btnStop = findViewById(R.id.btnStop)
-        lvDevices = findViewById(R.id.lvDevices)
-
-        deviceAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, mutableListOf())
-        lvDevices.adapter = deviceAdapter
-
-        lvDevices.setOnItemClickListener { _, _, position, _ ->
-            if (position < scannedDevicesList.size) {
-                val device = scannedDevicesList[position]
-                bleManager.connect(device)
-            }
-        }
-
+        
         bleManager = BleManager(this)
-
         checkPermissions()
 
-        btnScan.setOnClickListener {
-            if (hasPermissions()) {
-                bleManager.startScan()
-            } else {
-                checkPermissions()
+        setContent {
+            VibreeTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.background
+                ) {
+                    var currentScreen by remember { mutableStateOf(Screen.DASHBOARD) }
+                    
+                    // Observe LiveData from Repository
+                    val status by SensorDataRepository.status.observeAsState("Disconnected")
+                    val heartRate by SensorDataRepository.heartRate.observeAsState("0")
+                    val hrv by SensorDataRepository.hrv.observeAsState("0")
+                    
+                    when (currentScreen) {
+                        Screen.DASHBOARD -> {
+                            // We can pass data to Dashboard logic here
+                            // For now using the static "Resonant" but triggering animations with HR could be next
+                            DashboardScreen(
+                                onNavigateToMatch = { currentScreen = Screen.MATCH }
+                            )
+                        }
+                        Screen.MATCH -> {
+                            MatchScreen(
+                                onBack = { currentScreen = Screen.DASHBOARD }
+                            )
+                        }
+                    }
+                }
             }
-        }
-
-        btnQrScan.setOnClickListener {
-             val options = ScanOptions()
-             options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
-             options.setPrompt("Scan a watch QR code")
-             options.setCameraId(0) 
-             options.setBeepEnabled(false)
-             barcodeLauncher.launch(options)
-        }
-
-        btnStop.setOnClickListener {
-            bleManager.stopScan()
-        }
-
-        observeData()
-    }
-
-    private fun observeData() {
-        SensorDataRepository.status.observe(this) { status ->
-            tvStatus.text = "Status: $status"
-        }
-
-        SensorDataRepository.heartRate.observe(this) { hr ->
-            tvHeartRate.text = "Heart Rate: $hr bpm"
-        }
-
-        SensorDataRepository.hrv.observe(this) { hrv ->
-            tvHrv.text = "HRV (RR): $hrv ms"
-        }
-
-        SensorDataRepository.gsr.observe(this) { gsr ->
-            tvGsr.text = "GSR: $gsr"
-        }
-
-        SensorDataRepository.eda.observe(this) { eda ->
-            tvEda.text = "EDA: $eda"
-        }
-
-        SensorDataRepository.scannedDevices.observe(this) { devices ->
-            scannedDevicesList.clear()
-            scannedDevicesList.addAll(devices)
-            
-            val deviceNames = devices.map { device ->
-                if (device.name != null) "${device.name} (${device.address})" else "Unknown (${device.address})"
-            }
-            
-            deviceAdapter.clear()
-            deviceAdapter.addAll(deviceNames)
-            deviceAdapter.notifyDataSetChanged()
         }
     }
 
@@ -164,5 +113,10 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         return permissions.toTypedArray()
+    }
+    
+    // TODO: Expose scanning functions to UI if needed
+    fun startScan() {
+        if (hasPermissions()) bleManager.startScan()
     }
 }

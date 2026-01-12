@@ -20,12 +20,6 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew || true
-      # Note: Since gradlew isn't generated yet, we use gradle directly or generate it.
-      # However, standard practice is to check in gradlew. 
-      # Since we don't have it, we'll let the setup-gradle action handle it or use gradle directly.
-
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
       with:
