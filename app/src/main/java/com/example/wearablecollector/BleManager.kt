@@ -33,13 +33,8 @@ class BleManager(private val context: Context) {
             val device = result.device
             Log.d("BleManager", "Found device: ${device.name} ${device.address}")
             
-            // Simple logic: Connect to the first device found with a specific name or just the first one?
-            // For this demo, let's connect to the first device that advertises HR Service or looks like a sensor.
-            // In a real app, we'd show a list.
-            // checking simple condition: name not null
             if (device.name != null) {
-                 stopScan()
-                 connect(device)
+                 SensorDataRepository.addScannedDevice(device)
             }
         }
     }
@@ -79,6 +74,7 @@ class BleManager(private val context: Context) {
     fun startScan() {
         if (isScanning || scanner == null) return
         SensorDataRepository.updateStatus("Scanning...")
+        SensorDataRepository.clearScannedDevices()
         isScanning = true
         scanner.startScan(scanCallback)
         
@@ -98,6 +94,7 @@ class BleManager(private val context: Context) {
     }
 
     fun connect(device: BluetoothDevice) {
+        stopScan()
         SensorDataRepository.updateStatus("Connecting to ${device.name}...")
         bluetoothGatt = device.connectGatt(context, false, gattCallback)
     }

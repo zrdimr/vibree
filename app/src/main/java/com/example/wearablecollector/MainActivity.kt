@@ -4,7 +4,10 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.bluetooth.BluetoothDevice
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +24,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvEda: TextView
     private lateinit var btnScan: Button
     private lateinit var btnStop: Button
+    private lateinit var lvDevices: ListView
+    private lateinit var deviceAdapter: ArrayAdapter<String>
+    private val scannedDevicesList = mutableListOf<BluetoothDevice>()
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -43,6 +49,17 @@ class MainActivity : AppCompatActivity() {
         tvEda = findViewById(R.id.tvEda)
         btnScan = findViewById(R.id.btnScan)
         btnStop = findViewById(R.id.btnStop)
+        lvDevices = findViewById(R.id.lvDevices)
+
+        deviceAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, mutableListOf())
+        lvDevices.adapter = deviceAdapter
+
+        lvDevices.setOnItemClickListener { _, _, position, _ ->
+            if (position < scannedDevicesList.size) {
+                val device = scannedDevicesList[position]
+                bleManager.connect(device)
+            }
+        }
 
         bleManager = BleManager(this)
 
@@ -82,6 +99,19 @@ class MainActivity : AppCompatActivity() {
 
         SensorDataRepository.eda.observe(this) { eda ->
             tvEda.text = "EDA: $eda"
+        }
+
+        SensorDataRepository.scannedDevices.observe(this) { devices ->
+            scannedDevicesList.clear()
+            scannedDevicesList.addAll(devices)
+            
+            val deviceNames = devices.map { device ->
+                if (device.name != null) "${device.name} (${device.address})" else "Unknown (${device.address})"
+            }
+            
+            deviceAdapter.clear()
+            deviceAdapter.addAll(deviceNames)
+            deviceAdapter.notifyDataSetChanged()
         }
     }
 
