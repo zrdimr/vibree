@@ -7,6 +7,7 @@ object SensorDataRepository {
     val hrv = MutableLiveData<Int>(0) // Placeholder, as standard HR service might not give explicit HRV
     val gsr = MutableLiveData<Float>(0f)
     val eda = MutableLiveData<Float>(0f)
+    val stressLevel = MutableLiveData<Int>(0)
     val status = MutableLiveData<String>("Disconnected")
     val scannedDevices = MutableLiveData<List<android.bluetooth.BluetoothDevice>>(emptyList())
 
@@ -27,8 +28,10 @@ object SensorDataRepository {
     }
 
     fun updateHrv(rrInterval: Int) {
-        // Simple HRV representation using RR interval for now
-        hrv.postValue(rrInterval)
+        // Calculate HRV and Stress using the new logic
+        val result = com.example.wearablecollector.logic.StressCalculator.processRR(rrInterval)
+        hrv.postValue(result.hrv)
+        stressLevel.postValue(result.stressLevel)
     }
 
     fun updateGsr(value: Float) {
@@ -41,5 +44,11 @@ object SensorDataRepository {
 
     fun updateStatus(newStatus: String) {
         status.postValue(newStatus)
+        if (newStatus == "Disconnected") {
+            com.example.wearablecollector.logic.StressCalculator.reset()
+            heartRate.postValue(0)
+            hrv.postValue(0)
+            stressLevel.postValue(0)
+        }
     }
 }
