@@ -6,6 +6,7 @@ import com.example.wearablecollector.data.HeartRateRecord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.lifecycle.liveData
 
 object SensorDataRepository {
     private var heartRateDao: HeartRateDao? = null

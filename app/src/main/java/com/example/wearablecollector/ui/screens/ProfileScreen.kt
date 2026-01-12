@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.wearablecollector.ui.theme.VibreeNeonPink
 import com.example.wearablecollector.ui.theme.VibreeNeonPurple
 import com.example.wearablecollector.ui.theme.TextGray
+import androidx.compose.ui.draw.clip
 
 @Composable
 fun ProfileScreen(

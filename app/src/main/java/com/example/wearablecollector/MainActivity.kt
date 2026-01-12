@@ -99,9 +99,9 @@ class MainActivity : ComponentActivity() {
 
                 // Observe LiveData
                 val status by SensorDataRepository.status.observeAsState("Disconnected")
-                val heartRate by SensorDataRepository.heartRate.observeAsState("0")
-                val hrv by SensorDataRepository.hrv.observeAsState("0")
-                val stress by SensorDataRepository.stressLevel.observeAsState("0")
+                val heartRate by SensorDataRepository.heartRate.observeAsState(0)
+                val hrv by SensorDataRepository.hrv.observeAsState(0)
+                val stress by SensorDataRepository.stressLevel.observeAsState(0)
 
                 Scaffold(
                     containerColor = MaterialTheme.colorScheme.background,
@@ -196,9 +196,9 @@ class MainActivity : ComponentActivity() {
                                 onLoginClick = { startGoogleSignIn() }
                             )
                             Screen.DASHBOARD -> DashboardScreen(
-                                stressLevel = stress,
-                                hrv = hrv,
-                                heartRate = heartRate,
+                                stressLevel = stress.toString(),
+                                hrv = hrv.toString(),
+                                heartRate = heartRate.toString(),
                                 onNavigateToMatch = { currentScreen = Screen.MATCH },
                                 onNavigateToVitals = { currentScreen = Screen.VITALS }
                             )
@@ -220,17 +220,10 @@ class MainActivity : ComponentActivity() {
                             Screen.MATCH -> MatchScreen(
                                 onBack = { currentScreen = Screen.DASHBOARD }
                             )
-                            Screen.VITALS -> PlaceholderScreen("Vitals (Stress: $stress)")
-                            Screen.ACTIVITY -> PlaceholderScreen("Activity")
-                            Screen.SETTINGS -> SettingsScreen(
-                                onBack = { currentScreen = Screen.PROFILE },
-                                onStartScan = { startScan() },
-                                onConnect = { address -> bleManager.connect(address) }
-                            )
                             Screen.VITALS -> VitalsScreen(
-                                stressLevel = try { stress.toInt() } catch(e:Exception){0},
-                                hrv = try { hrv.toInt() } catch(e:Exception){0},
-                                heartRate = try { heartRate.toInt() } catch(e:Exception){0},
+                                stressLevel = stress,
+                                hrv = hrv,
+                                heartRate = heartRate,
                                 onBack = { currentScreen = Screen.DASHBOARD }
                             )
                             Screen.HISTORY -> HistoryScreen(
