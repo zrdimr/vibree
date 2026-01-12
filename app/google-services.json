@@ -1,46 +1,39 @@
 {
-    "client": [
-        {
-            "client_info": {
-                "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
-                "android_client_info": {
-                    "package_name": "com.example.wearablecollector"
-                }
-            },
-            "oauth_client": [
-                {
-                    "client_id": "000000000000-dummy.apps.googleusercontent.com",
-                    "client_type": 1,
-                    "android_info": {
-                        "package_name": "com.example.wearablecollector",
-                        "certificate_hash": "dummy"
-                    }
-                },
-                {
-                    "client_id": "000000000000-dummy_web.apps.googleusercontent.com",
-                    "client_type": 3
-                }
-            ],
-            "api_key": [
-                {
-                    "current_key": "dummy_api_key"
-                }
-            ],
-            "services": {
-                "appinvite_service": {},
-                "google_signin_service": {
-                    "status": 2
-                },
-                "ads_service": {
-                    "status": 1
-                }
-            }
+  "project_info": {
+    "project_number": "1084169848188",
+    "project_id": "vibree-2026",
+    "storage_bucket": "vibree-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084169848188:android:8ae7a1ce20d560305cd0f9",
+        "android_client_info": {
+          "package_name": "com.example.wearablecollector"
         }
-    ],
-    "configuration_version": "1",
-    "project_info": {
-        "project_number": "000000000000",
-        "project_id": "mock-project-id",
-        "storage_bucket": "mock-project-id.appspot.com"
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084169848188-m3bf8ni00o193sgih7q66pth1j305cso.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2SG20SMK3_qEqIxC8kxwCQz6Oc_jAoOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084169848188-m3bf8ni00o193sgih7q66pth1j305cso.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
+  ],
+  "configuration_version": "1"
 }
