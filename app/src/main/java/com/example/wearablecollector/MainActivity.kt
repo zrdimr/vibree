@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,10 +25,25 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvGsr: TextView
     private lateinit var tvEda: TextView
     private lateinit var btnScan: Button
+    private lateinit var btnQrScan: Button
     private lateinit var btnStop: Button
     private lateinit var lvDevices: ListView
     private lateinit var deviceAdapter: ArrayAdapter<String>
     private val scannedDevicesList = mutableListOf<BluetoothDevice>()
+
+    private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
+        if (result.contents != null) {
+            val scannedContent = result.contents
+            Toast.makeText(this, "Scanned: $scannedContent", Toast.LENGTH_LONG).show()
+            // Basic simplistic MAC address check (format XX:XX:XX:XX:XX:XX)
+            // In reality, might need more complex parsing depending on what the QR code actually holds
+            if (scannedContent.matches(Regex("([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}"))) {
+                 bleManager.connect(scannedContent)
+            } else {
+                 Toast.makeText(this, "Valid MAC Address not found in QR", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -48,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         tvGsr = findViewById(R.id.tvGsr)
         tvEda = findViewById(R.id.tvEda)
         btnScan = findViewById(R.id.btnScan)
+        btnQrScan = findViewById(R.id.btnQrScan)
         btnStop = findViewById(R.id.btnStop)
         lvDevices = findViewById(R.id.lvDevices)
 
@@ -71,6 +89,15 @@ class MainActivity : AppCompatActivity() {
             } else {
                 checkPermissions()
             }
+        }
+
+        btnQrScan.setOnClickListener {
+             val options = ScanOptions()
+             options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+             options.setPrompt("Scan a watch QR code")
+             options.setCameraId(0) 
+             options.setBeepEnabled(false)
+             barcodeLauncher.launch(options)
         }
 
         btnStop.setOnClickListener {

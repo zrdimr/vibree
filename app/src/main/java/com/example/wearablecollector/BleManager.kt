@@ -99,6 +99,20 @@ class BleManager(private val context: Context) {
         bluetoothGatt = device.connectGatt(context, false, gattCallback)
     }
 
+    fun connect(address: String) {
+        stopScan()
+        try {
+            val device = bluetoothAdapter?.getRemoteDevice(address)
+            if (device != null) {
+                connect(device)
+            } else {
+                SensorDataRepository.updateStatus("Error: Device not found")
+            }
+        } catch (e: IllegalArgumentException) {
+            SensorDataRepository.updateStatus("Error: Invalid Address")
+        }
+    }
+
     private fun enableNotification(gatt: BluetoothGatt, service: BluetoothGattService, charUuid: UUID) {
         val characteristic = service.getCharacteristic(charUuid)
         if (characteristic != null) {
