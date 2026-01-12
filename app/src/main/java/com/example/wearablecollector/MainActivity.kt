@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 
     // Simple navigation state
     private enum class Screen {
-        DASHBOARD, MATCH, SEARCH, PROFILE, VITALS, ACTIVITY
+        DASHBOARD, MATCH, SEARCH, PROFILE, VITALS, ACTIVITY, SETTINGS
     }
 
     private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
@@ -185,12 +185,19 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToMatch = { currentScreen = Screen.MATCH }
                             )
                             Screen.SEARCH -> SearchScreen()
-                            Screen.PROFILE -> ProfileScreen()
+                            Screen.PROFILE -> ProfileScreen(
+                                onNavigateToSettings = { currentScreen = Screen.SETTINGS }
+                            )
                             Screen.MATCH -> MatchScreen(
                                 onBack = { currentScreen = Screen.DASHBOARD }
                             )
                             Screen.VITALS -> PlaceholderScreen("Vitals")
                             Screen.ACTIVITY -> PlaceholderScreen("Activity")
+                            Screen.SETTINGS -> SettingsScreen(
+                                onBack = { currentScreen = Screen.PROFILE },
+                                onStartScan = { startScan() },
+                                onConnect = { address -> bleManager.connect(address) }
+                            )
                         }
                     }
                 }

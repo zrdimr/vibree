@@ -17,7 +17,7 @@ import com.example.wearablecollector.ui.theme.VibreeNeonPurple
 import com.example.wearablecollector.ui.theme.TextGray
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(onNavigateToSettings: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +56,7 @@ fun ProfileScreen() {
         // Menu
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             MenuItem("History")
-            MenuItem("Settings")
+            MenuItem("Settings", onClick = onNavigateToSettings)
             MenuItem("Logout")
         }
     }
@@ -71,11 +71,12 @@ fun ProfileStat(value: String, label: String) {
 }
 
 @Composable
-fun MenuItem(text: String) {
+fun MenuItem(text: String, onClick: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White.copy(alpha = 0.05f), RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
             .padding(16.dp)
     ) {
         Text(text, color = Color.White, fontWeight = FontWeight.Medium)
