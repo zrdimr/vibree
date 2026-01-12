@@ -1,6 +1,7 @@
 package com.example.wearablecollector.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,11 +34,13 @@ fun SearchScreen() {
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             shape = RoundedCornerShape(20.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color.White.copy(alpha = 0.1f),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White.copy(alpha = 0.1f),
+                unfocusedContainerColor = Color.White.copy(alpha = 0.1f),
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                textColor = Color.White
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
             )
         )
 
