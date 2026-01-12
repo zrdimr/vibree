@@ -14,6 +14,7 @@ val Pink40 = Color(0xFF7D5260)
 val VibreeBlack = Color(0xFF0F172A) // Deep Slate Blue
 val VibreeDarkPurple = Color(0xFF1E293B) // Slightly lighter slate for surfaces
 val VibreeNeonPink = Color(0xFF2DD4BF) // Soft Teal (Replacing Neon Pink)
+val VibreeTeal = Color(0xFF2DD4BF) // Explicit Teal alias for clarity
 val VibreeNeonPurple = Color(0xFF818CF8) // Soft Indigo (Replacing Neon Purple)
 val VibreeGlass = Color(0x0DFFFFFF) // 5% White opacity
 val TextWhite = Color(0xFFF1F5F9)

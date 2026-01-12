@@ -119,6 +119,8 @@ class MainActivity : ComponentActivity() {
                                             Screen.VITALS -> "Vitals"
                                             Screen.ACTIVITY -> "Activity"
                                             Screen.SETTINGS -> "Settings"
+                                            Screen.HISTORY -> "History"
+                                            Screen.EDIT_PROFILE -> "Edit Profile"
                                             else -> ""
                                         },
                                         color = Color.White
@@ -229,6 +231,7 @@ class MainActivity : ComponentActivity() {
                             Screen.HISTORY -> HistoryScreen(
                                 onBack = { currentScreen = Screen.PROFILE }
                             )
+                            Screen.ACTIVITY -> PlaceholderScreen("Activity")
                         }
                     }
                 }
