@@ -117,11 +117,7 @@ fun EditProfileScreen(
                 onValueChange = { name = it },
                 label = { Text("Name") },
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = Color.White,
-                    focusedBorderColor = VibreeNeonPink,
-                    unfocusedBorderColor = Color.Gray
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -132,11 +128,7 @@ fun EditProfileScreen(
                 onValueChange = { gender = it },
                 label = { Text("Gender (e.g. Male, Female, Other)") },
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = Color.White,
-                    focusedBorderColor = VibreeNeonPink,
-                    unfocusedBorderColor = Color.Gray
-                )
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))

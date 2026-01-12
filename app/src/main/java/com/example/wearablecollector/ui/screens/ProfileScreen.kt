@@ -56,7 +56,7 @@ fun ProfileScreen(
                 coil.compose.AsyncImage(
                     model = user.photoUrl,
                     contentDescription = "Profile Photo",
-                    modifier = Modifier.fillMaxSize().androidx.compose.ui.draw.clip(CircleShape),
+                    modifier = Modifier.fillMaxSize().clip(CircleShape),
                     contentScale = androidx.compose.ui.layout.ContentScale.Crop
                 )
              } else {

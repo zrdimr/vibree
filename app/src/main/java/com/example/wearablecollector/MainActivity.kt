@@ -228,6 +228,11 @@ class MainActivity : ComponentActivity() {
                                 heartRate = heartRate,
                                 onBack = { currentScreen = Screen.DASHBOARD }
                             )
+                            Screen.SETTINGS -> SettingsScreen(
+                                onBack = { currentScreen = Screen.PROFILE },
+                                onStartScan = { startScan() },
+                                onConnect = { address -> bleManager.connect(address) }
+                            )
                             Screen.HISTORY -> HistoryScreen(
                                 onBack = { currentScreen = Screen.PROFILE }
                             )
