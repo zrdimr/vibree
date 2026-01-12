@@ -18,7 +18,11 @@ import com.example.wearablecollector.ui.theme.VibreeNeonPurple
 import com.example.wearablecollector.ui.theme.TextGray
 
 @Composable
-fun ProfileScreen(onNavigateToSettings: () -> Unit) {
+fun ProfileScreen(
+    avgHr: String,
+    hrv: String,
+    onNavigateToSettings: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,8 +51,8 @@ fun ProfileScreen(onNavigateToSettings: () -> Unit) {
                 .padding(20.dp),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            ProfileStat("72", "Avg HR")
-            ProfileStat("45", "HRV")
+            ProfileStat(avgHr, "Last HR") // Updated label to be more accurate since it is live/last
+            ProfileStat(hrv, "HRV")
             ProfileStat("12", "Matches")
         }
 

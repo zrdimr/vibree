@@ -187,6 +187,8 @@ class MainActivity : ComponentActivity() {
                             )
                             Screen.SEARCH -> SearchScreen()
                             Screen.PROFILE -> ProfileScreen(
+                                avgHr = heartRate.toString(),
+                                hrv = hrv.toString(),
                                 onNavigateToSettings = { currentScreen = Screen.SETTINGS }
                             )
                             Screen.MATCH -> MatchScreen(
