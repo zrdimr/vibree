@@ -24,6 +24,7 @@
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
 
     <application
+        android:name=".VibreeApplication"
         android:allowBackup="true"
 
         android:icon="@drawable/ic_logo"

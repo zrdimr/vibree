@@ -30,6 +30,12 @@ import androidx.core.content.ContextCompat
 import com.example.wearablecollector.ui.screens.*
 import com.example.wearablecollector.ui.theme.VibreeTheme
 import com.journeyapps.barcodescanner.ScanContract
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.example.wearablecollector.R
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.journeyapps.barcodescanner.ScanOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
     // Simple navigation state
     private enum class Screen {
-        DASHBOARD, MATCH, SEARCH, PROFILE, VITALS, ACTIVITY, SETTINGS
+        LOADING, LOGIN, DASHBOARD, MATCH, SEARCH, PROFILE, VITALS, ACTIVITY, SETTINGS
     }
 
     private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
@@ -64,62 +70,79 @@ class MainActivity : ComponentActivity() {
                 Toast.makeText(this, "Permissions denied, BLE cannot function", Toast.LENGTH_LONG).show()
             }
         }
+    
+    // Google Sign In Launcher
+    private val signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            firebaseAuthWithGoogle(account.idToken!!)
+        } catch (e: ApiException) {
+            Toast.makeText(this, "Google Sign In Failed", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         bleManager = BleManager(this)
         checkPermissions()
+        
+        // Initialize Auth
+        val auth = FirebaseAuth.getInstance()
+
 
         setContent {
             VibreeTheme {
-                // Navigation State
-                var currentScreen by remember { mutableStateOf(Screen.DASHBOARD) }
+                // Navigation State - Start with Loading
+                var currentScreen by remember { mutableStateOf(Screen.LOADING) }
 
-                // Observe LiveData from Repository (keeping existing logic)
+                // Observe LiveData
                 val status by SensorDataRepository.status.observeAsState("Disconnected")
                 val heartRate by SensorDataRepository.heartRate.observeAsState("0")
                 val hrv by SensorDataRepository.hrv.observeAsState("0")
+                val stress by SensorDataRepository.stressLevel.observeAsState("0")
 
                 Scaffold(
                     containerColor = MaterialTheme.colorScheme.background,
                     topBar = {
-                        TopAppBar(
-                            title = { 
-                                Text(
-                                    text = when(currentScreen) {
-                                        Screen.DASHBOARD -> "Dashboard"
-                                        Screen.SEARCH -> "Search"
-                                        Screen.PROFILE -> "Profile"
-                                        Screen.MATCH -> "Connections"
-                                        Screen.VITALS -> "Vitals"
-                                        Screen.ACTIVITY -> "Activity"
-                                        Screen.SETTINGS -> "Settings"
-                                    },
-                                    color = Color.White
-                                ) 
-                            },
-                            actions = {
-                                IconButton(onClick = { currentScreen = Screen.PROFILE }) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(32.dp)
-                                            .background(Color.Gray, CircleShape)
-                                            .border(1.dp, com.example.wearablecollector.ui.theme.VibreeNeonPink, CircleShape)
-                                    )
-                                }
-                            },
-                            colors = TopAppBarDefaults.smallTopAppBarColors(
-                                containerColor = Color.Transparent,
-                                titleContentColor = Color.White
+                        // Hide TopBar on Loading and Login screens
+                        if (currentScreen != Screen.LOADING && currentScreen != Screen.LOGIN) {
+                            TopAppBar(
+                                title = { 
+                                    Text(
+                                        text = when(currentScreen) {
+                                            Screen.DASHBOARD -> "Dashboard"
+                                            Screen.SEARCH -> "Search"
+                                            Screen.PROFILE -> "Profile"
+                                            Screen.MATCH -> "Connections"
+                                            Screen.VITALS -> "Vitals"
+                                            Screen.ACTIVITY -> "Activity"
+                                            Screen.SETTINGS -> "Settings"
+                                            else -> ""
+                                        },
+                                        color = Color.White
+                                    ) 
+                                },
+                                actions = {
+                                    IconButton(onClick = { currentScreen = Screen.PROFILE }) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(32.dp)
+                                                .background(Color.Gray, CircleShape)
+                                                .border(1.dp, com.example.wearablecollector.ui.theme.VibreeNeonPink, CircleShape)
+                                        )
+                                    }
+                                },
+                                colors = TopAppBarDefaults.smallTopAppBarColors(
+                                    containerColor = Color.Transparent,
+                                    titleContentColor = Color.White
+                                )
                             )
-                        )
+                        }
                     },
                     bottomBar = {
-                        // Hide bottom bar on Match screen if desired, or keep it. 
-                        // HTML design shows bottom bar on all screens except maybe match? 
-                        // HTML Match screen has back button in header, but let's keep bottom nav for consistency unless requested.
-                        if (currentScreen != Screen.MATCH) {
+                        if (currentScreen != Screen.LOADING && currentScreen != Screen.LOGIN && currentScreen != Screen.MATCH) {
                             NavigationBar(
                                 containerColor = com.example.wearablecollector.ui.theme.VibreeBlack.copy(alpha = 0.95f),
                                 contentColor = com.example.wearablecollector.ui.theme.VibreeNeonPink
@@ -129,52 +152,29 @@ class MainActivity : ComponentActivity() {
                                     label = { Text("Home") },
                                     selected = currentScreen == Screen.DASHBOARD,
                                     onClick = { currentScreen = Screen.DASHBOARD },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
-                                        selectedTextColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
-                                        unselectedIconColor = Color.Gray,
-                                        unselectedTextColor = Color.Gray,
-                                        indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple
-                                    )
+                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink, indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple)
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.Search, contentDescription = "Search") },
                                     label = { Text("Search") },
                                     selected = currentScreen == Screen.SEARCH,
                                     onClick = { currentScreen = Screen.SEARCH },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
-                                        selectedTextColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
-                                        unselectedIconColor = Color.Gray,
-                                        unselectedTextColor = Color.Gray,
-                                        indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple
-                                    )
+                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink, indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple)
+
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.Favorite, contentDescription = "Vitals") },
                                     label = { Text("Vitals") },
                                     selected = currentScreen == Screen.VITALS,
                                     onClick = { currentScreen = Screen.VITALS },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
-                                        selectedTextColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
-                                        unselectedIconColor = Color.Gray,
-                                        unselectedTextColor = Color.Gray,
-                                        indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple
-                                    )
+                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink, indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple)
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Filled.List, contentDescription = "Activity") },
                                     label = { Text("Activity") },
                                     selected = currentScreen == Screen.ACTIVITY,
                                     onClick = { currentScreen = Screen.ACTIVITY },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
-                                        selectedTextColor = com.example.wearablecollector.ui.theme.VibreeNeonPink,
-                                        unselectedIconColor = Color.Gray,
-                                        unselectedTextColor = Color.Gray,
-                                        indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple
-                                    )
+                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink, indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple)
                                 )
                             }
                         }
@@ -182,6 +182,19 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         when (currentScreen) {
+                            Screen.LOADING -> LoadingScreen(
+                                onTimeout = {
+                                    val currentUser = auth.currentUser
+                                    if (currentUser != null) {
+                                        currentScreen = Screen.DASHBOARD
+                                    } else {
+                                        currentScreen = Screen.LOGIN
+                                    }
+                                }
+                            )
+                            Screen.LOGIN -> LoginScreen(
+                                onLoginClick = { startGoogleSignIn() }
+                            )
                             Screen.DASHBOARD -> DashboardScreen(
                                 onNavigateToMatch = { currentScreen = Screen.MATCH }
                             )
@@ -189,12 +202,16 @@ class MainActivity : ComponentActivity() {
                             Screen.PROFILE -> ProfileScreen(
                                 avgHr = heartRate.toString(),
                                 hrv = hrv.toString(),
-                                onNavigateToSettings = { currentScreen = Screen.SETTINGS }
+                                onNavigateToSettings = { currentScreen = Screen.SETTINGS },
+                                onLogout = {
+                                    auth.signOut()
+                                    currentScreen = Screen.LOGIN
+                                }
                             )
                             Screen.MATCH -> MatchScreen(
                                 onBack = { currentScreen = Screen.DASHBOARD }
                             )
-                            Screen.VITALS -> PlaceholderScreen("Vitals")
+                            Screen.VITALS -> PlaceholderScreen("Vitals (Stress: $stress)")
                             Screen.ACTIVITY -> PlaceholderScreen("Activity")
                             Screen.SETTINGS -> SettingsScreen(
                                 onBack = { currentScreen = Screen.PROFILE },
@@ -206,6 +223,37 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    
+    // Auth Helper Functions
+    private fun startGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id)) 
+            .requestEmail()
+            .build()
+        val googleSignInClient = GoogleSignIn.getClient(this, gso)
+        signInLauncher.launch(googleSignInClient.signInIntent)
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Welcome ${FirebaseAuth.getInstance().currentUser?.displayName}", Toast.LENGTH_SHORT).show()
+                    // Navigation to Dashboard will happen via state observation or could force recompose, 
+                    // but for now let's just create a mechanism to trigger update. 
+                    // Actual mechanism: The Loading screen logic already ran. 
+                    // We need to switch screen state. 
+                    // Since 'currentScreen' is inside setContent, we can't easily change it from here without a ViewModel or global state.
+                    // REFACTOR: ideally use ViewModel. 
+                    // HACK for MVP: Restart Activity or simple observer? 
+                    // Actually, let's just recreate the activity for simplicity to re-trigger Loading -> Dashboard check.
+                    recreate()
+                } else {
+                    Toast.makeText(this, "Authentication Failed", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     private fun hasPermissions(): Boolean {

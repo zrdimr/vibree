@@ -21,7 +21,8 @@ import com.example.wearablecollector.ui.theme.TextGray
 fun ProfileScreen(
     avgHr: String,
     hrv: String,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onLogout: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -62,7 +63,7 @@ fun ProfileScreen(
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             MenuItem("History")
             MenuItem("Settings", onClick = onNavigateToSettings)
-            MenuItem("Logout")
+            MenuItem("Logout", onClick = onLogout)
         }
     }
 }
