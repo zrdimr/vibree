@@ -94,6 +94,7 @@ class MainActivity : ComponentActivity() {
                                         Screen.MATCH -> "Connections"
                                         Screen.VITALS -> "Vitals"
                                         Screen.ACTIVITY -> "Activity"
+                                        Screen.SETTINGS -> "Settings"
                                     },
                                     color = Color.White
                                 ) 
