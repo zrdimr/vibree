@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WearableCollector</string>
+    <string name="scan">Scan</string>
+    <string name="stop">Stop</string>
+    <string name="unknown_device">Unknown Device</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+</resources>
