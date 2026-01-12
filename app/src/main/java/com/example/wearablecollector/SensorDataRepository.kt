@@ -79,4 +79,10 @@ object SensorDataRepository {
             stressLevel.postValue(0)
         }
     }
+
+    fun getAllRecords(): androidx.lifecycle.LiveData<List<HeartRateRecord>> {
+        return androidx.lifecycle.liveData { 
+            heartRateDao?.getAllRecords()?.collect { emit(it) } 
+        }
+    }
 }

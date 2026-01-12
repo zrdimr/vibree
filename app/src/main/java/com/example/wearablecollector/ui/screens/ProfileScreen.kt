@@ -22,8 +22,21 @@ fun ProfileScreen(
     avgHr: String,
     hrv: String,
     onNavigateToSettings: () -> Unit,
+    onEditProfile: () -> Unit,
+    onHistory: () -> Unit,
     onLogout: () -> Unit
 ) {
+    val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
+    val user = auth.currentUser
+
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val userPrefs = androidx.compose.runtime.remember { com.example.wearablecollector.utils.UserPreferences(context) }
+    
+    // Force refresh of state when revisiting (basic approach)
+    // In a real app we'd observe a data store or shared ViewModel
+    val gender = userPrefs.gender
+    val birthday = userPrefs.birthday
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,14 +48,41 @@ fun ProfileScreen(
             modifier = Modifier
                 .size(100.dp)
                 .background(Color.DarkGray, CircleShape)
-                .border(2.dp, VibreeNeonPink, CircleShape)
-        )
+                .border(2.dp, VibreeNeonPink, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+             if (user?.photoUrl != null) {
+                coil.compose.AsyncImage(
+                    model = user.photoUrl,
+                    contentDescription = "Profile Photo",
+                    modifier = Modifier.fillMaxSize().androidx.compose.ui.draw.clip(CircleShape),
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                )
+             } else {
+                 Text(
+                     text = user?.displayName?.take(1)?.uppercase() ?: "U",
+                     style = MaterialTheme.typography.headlineLarge,
+                     color = Color.White
+                 )
+             }
+        }
         Spacer(modifier = Modifier.height(16.dp))
         
-        Text("You", style = MaterialTheme.typography.titleLarge, color = Color.White)
+        Text(user?.displayName ?: "User", style = MaterialTheme.typography.titleLarge, color = Color.White)
+        
+        // extra details
+        if (gender.isNotEmpty()) {
+            Text(text = gender, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+        }
+        if (birthday > 0) {
+            // Quick format for display
+             Text(text = "Born: $birthday", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
         Text("Vibe: Resonant", color = VibreeNeonPink)
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Stats
         Row(
@@ -52,7 +92,7 @@ fun ProfileScreen(
                 .padding(20.dp),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            ProfileStat(avgHr, "Last HR") // Updated label to be more accurate since it is live/last
+            ProfileStat(avgHr, "Last HR")
             ProfileStat(hrv, "HRV")
             ProfileStat("12", "Matches")
         }
@@ -61,7 +101,8 @@ fun ProfileScreen(
 
         // Menu
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            MenuItem("History")
+            MenuItem("Edit Profile", onClick = onEditProfile)
+            MenuItem("History", onClick = onHistory)
             MenuItem("Settings", onClick = onNavigateToSettings)
             MenuItem("Logout", onClick = onLogout)
         }

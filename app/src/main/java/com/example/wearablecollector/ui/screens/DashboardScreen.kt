@@ -15,7 +15,11 @@ import com.example.wearablecollector.ui.theme.VibreeNeonPink
 
 @Composable
 fun DashboardScreen(
-    onNavigateToMatch: () -> Unit
+    stressLevel: String = "0",
+    hrv: String = "0",
+    heartRate: String = "0",
+    onNavigateToMatch: () -> Unit,
+    onNavigateToVitals: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -29,7 +33,31 @@ fun DashboardScreen(
             style = MaterialTheme.typography.titleLarge,
             color = Color.White
         )
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Status Row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White.copy(alpha = 0.05f), MaterialTheme.shapes.medium)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+             Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                 Text("HR", color = Color.Gray)
+                 Text("$heartRate BPM", color = VibreeNeonPink, fontWeight = FontWeight.Bold)
+             }
+             Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                 Text("HRV", color = Color.Gray)
+                 Text("$hrv ms", color = Color.Cyan, fontWeight = FontWeight.Bold)
+             }
+             Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                 Text("Stress", color = Color.Gray)
+                 Text(stressLevel, color = if(stressLevel.toIntOrNull() ?: 0 > 50) Color.Red else Color.Green, fontWeight = FontWeight.Bold)
+             }
+        }
+        
+        Spacer(modifier = Modifier.height(24.dp))
         
         // Heartbeat Visualization Circle
         Box(
@@ -49,22 +77,14 @@ fun DashboardScreen(
         
         Spacer(modifier = Modifier.height(32.dp))
         
-        Text(
-            text = "Your beats\nare telling us",
-            style = MaterialTheme.typography.headlineLarge,
-            color = Color.White,
-            textAlign = TextAlign.Center
-        )
+        Button(
+            onClick = onNavigateToVitals,
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+        ) {
+            Text("View Vitals Details")
+        }
         
         Spacer(modifier = Modifier.height(16.dp))
-        
-        Text(
-            text = "Current Vibe: Resonant",
-            style = MaterialTheme.typography.bodyLarge,
-            color = VibreeNeonPink
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
 
         Button(
             onClick = onNavigateToMatch,

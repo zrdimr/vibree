@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
     // Simple navigation state
     private enum class Screen {
-        LOADING, LOGIN, DASHBOARD, MATCH, SEARCH, PROFILE, VITALS, ACTIVITY, SETTINGS
+        LOADING, LOGIN, DASHBOARD, MATCH, SEARCH, PROFILE, EDIT_PROFILE, VITALS, ACTIVITY, SETTINGS, HISTORY
     }
 
     private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
@@ -196,17 +196,26 @@ class MainActivity : ComponentActivity() {
                                 onLoginClick = { startGoogleSignIn() }
                             )
                             Screen.DASHBOARD -> DashboardScreen(
-                                onNavigateToMatch = { currentScreen = Screen.MATCH }
+                                stressLevel = stress,
+                                hrv = hrv,
+                                heartRate = heartRate,
+                                onNavigateToMatch = { currentScreen = Screen.MATCH },
+                                onNavigateToVitals = { currentScreen = Screen.VITALS }
                             )
                             Screen.SEARCH -> SearchScreen()
                             Screen.PROFILE -> ProfileScreen(
                                 avgHr = heartRate.toString(),
                                 hrv = hrv.toString(),
                                 onNavigateToSettings = { currentScreen = Screen.SETTINGS },
+                                onEditProfile = { currentScreen = Screen.EDIT_PROFILE },
+                                onHistory = { currentScreen = Screen.HISTORY },
                                 onLogout = {
                                     auth.signOut()
                                     currentScreen = Screen.LOGIN
                                 }
+                            )
+                            Screen.EDIT_PROFILE -> EditProfileScreen(
+                                onBack = { currentScreen = Screen.PROFILE }
                             )
                             Screen.MATCH -> MatchScreen(
                                 onBack = { currentScreen = Screen.DASHBOARD }
@@ -218,9 +227,18 @@ class MainActivity : ComponentActivity() {
                                 onStartScan = { startScan() },
                                 onConnect = { address -> bleManager.connect(address) }
                             )
+                            Screen.VITALS -> VitalsScreen(
+                                stressLevel = try { stress.toInt() } catch(e:Exception){0},
+                                hrv = try { hrv.toInt() } catch(e:Exception){0},
+                                heartRate = try { heartRate.toInt() } catch(e:Exception){0},
+                                onBack = { currentScreen = Screen.DASHBOARD }
+                            )
+                            Screen.HISTORY -> HistoryScreen(
+                                onBack = { currentScreen = Screen.PROFILE }
+                            )
                         }
                     }
-                }
+                )
             }
         }
     }
