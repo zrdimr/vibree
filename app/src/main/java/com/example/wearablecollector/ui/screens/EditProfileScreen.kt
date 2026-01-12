@@ -146,9 +146,7 @@ fun EditProfileScreen(
                 value = birthday,
                 onValueChange = { birthday = it },
                 label = { Text("Birthday (YYYY-MM-DD)") },
-                modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
             )
 
             Spacer(modifier = Modifier.height(32.dp))
