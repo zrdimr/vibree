@@ -31,10 +31,11 @@ jobs:
           
           # Build App for Simulator (Unsigned)
           # Use 'Debug' configuration and a simulator destination to verify build and produce an app bundle
+          # Using 'iPhone 16 Pro' as 'iPhone 15' was not found in the runner environment
           xcodebuild -project Vibree.xcodeproj \
             -scheme Vibree \
             -configuration Debug \
-            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
             -derivedDataPath build \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
             
