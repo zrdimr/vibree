@@ -1,0 +1,14 @@
+name: Vibree
+options:
+  bundleIdPrefix: com.example
+targets:
+  Vibree:
+    type: application
+    platform: iOS
+    deploymentTarget: 15.0
+    sources: [Vibree]
+    info:
+      path: Info.plist
+      properties:
+        CFBundleVersion: 1
+        CFBundleShortVersionString: 1.0
