@@ -41,22 +41,22 @@ object SensorDataRepository {
     }
 
     fun updateHrv(rrInterval: Int) {
-        // Calculate HRV and Stress using the new logic
-        val result = com.example.wearablecollector.logic.StressCalculator.processRR(rrInterval)
+        // Calculate HRV and Stress using the new Edge AI Agent
+        val result = com.example.wearablecollector.logic.StressAnalysisAgent.process(rrInterval)
         val currentHr = heartRate.value ?: 0
         
-        hrv.postValue(result.hrv)
-        stressLevel.postValue(result.stressLevel)
+        hrv.postValue(result.rmssd.toInt())
+        stressLevel.postValue(result.stressScore)
 
         // Save to DB
-        if (result.hrv > 0) {
+        if (result.rmssd > 0) {
             scope.launch {
                 heartRateDao?.insert(
                     HeartRateRecord(
                         timestamp = System.currentTimeMillis(),
                         bpm = currentHr,
-                        hrv = result.hrv,
-                        stressLevel = result.stressLevel
+                        hrv = result.rmssd.toInt(),
+                        stressLevel = result.stressScore
                     )
                 )
             }
@@ -74,7 +74,7 @@ object SensorDataRepository {
     fun updateStatus(newStatus: String) {
         status.postValue(newStatus)
         if (newStatus == "Disconnected") {
-            com.example.wearablecollector.logic.StressCalculator.reset()
+            com.example.wearablecollector.logic.StressAnalysisAgent.reset()
             heartRate.postValue(0)
             hrv.postValue(0)
             stressLevel.postValue(0)

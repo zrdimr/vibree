@@ -13,7 +13,7 @@ class SensorDataRepository: ObservableObject {
     @Published var status: String = "Disconnected"
     @Published var scannedDevices: [CBPeripheral] = []
     
-    private let stressCalculator = StressCalculator()
+
     
     private init() {}
     
@@ -32,14 +32,14 @@ class SensorDataRepository: ObservableObject {
     }
     
     func updateHrv(rrInterval: Int) {
-        let result = stressCalculator.processRR(rrMs: rrInterval)
+        let result = StressAnalysisAgent.shared.process(rrIntervalMs: rrInterval)
         
-        self.hrv = result.hrv
-        self.stressLevel = result.stressLevel
+        self.hrv = Int(result.rmssd)
+        self.stressLevel = result.stressScore
         
         // In a real app, save to CoreData or Realm here
-        if result.hrv > 0 {
-            print("Logged: HR: \(heartRate), HRV: \(result.hrv), Stress: \(result.stressLevel)")
+        if result.rmssd > 0 {
+            print("Logged: HR: \(heartRate), HRV: \(Int(result.rmssd)), Stress: \(result.stressScore)")
         }
     }
     
@@ -54,7 +54,7 @@ class SensorDataRepository: ObservableObject {
     func updateStatus(_ newStatus: String) {
         self.status = newStatus
         if newStatus == "Disconnected" {
-            stressCalculator.reset()
+            StressAnalysisAgent.shared.reset()
             self.heartRate = 0
             self.hrv = 0
             self.stressLevel = 0
