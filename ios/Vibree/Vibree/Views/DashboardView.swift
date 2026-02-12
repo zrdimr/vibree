@@ -4,6 +4,7 @@ struct DashboardView: View {
     @EnvironmentObject var repository: SensorDataRepository
     var onNavigateToProfile: () -> Void
     var onNavigateToVitals: () -> Void
+    var onNavigateToSocial: () -> Void
     
     var body: some View {
         VStack {
@@ -51,7 +52,17 @@ struct DashboardView: View {
                             .background(Color.pink)
                             .cornerRadius(12)
                     }
-                    .padding(.top)
+                    
+                    Button(action: onNavigateToSocial) {
+                        Text("Tempat Curhat (Social)")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue)
+                            .cornerRadius(12)
+                    }
+                    .padding(.top, 10)
                 }
                 .padding()
             }
