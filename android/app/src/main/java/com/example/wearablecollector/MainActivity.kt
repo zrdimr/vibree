@@ -20,6 +20,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Face // For Social
+
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -28,6 +30,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.wearablecollector.ui.screens.*
+import com.example.wearablecollector.ui.*
+import com.example.wearablecollector.viewmodels.FeedViewModel
+import com.example.wearablecollector.viewmodels.FeedViewModelFactory
+
 import com.example.wearablecollector.ui.theme.VibreeTheme
 import com.journeyapps.barcodescanner.ScanContract
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -46,8 +52,9 @@ class MainActivity : ComponentActivity() {
 
     // Simple navigation state
     private enum class Screen {
-        LOADING, LOGIN, DASHBOARD, MATCH, SEARCH, PROFILE, EDIT_PROFILE, VITALS, ACTIVITY, SETTINGS, HISTORY
+        LOADING, LOGIN, DASHBOARD, MATCH, SEARCH, PROFILE, EDIT_PROFILE, VITALS, ACTIVITY, SETTINGS, HISTORY, SOCIAL, CREATE_POST
     }
+
 
     private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
         if (result.contents != null) {
@@ -103,6 +110,12 @@ class MainActivity : ComponentActivity() {
                 val hrv by SensorDataRepository.hrv.observeAsState(0)
                 val stress by SensorDataRepository.stressLevel.observeAsState(0)
 
+                // Initialize ViewModel
+                val feedViewModel: FeedViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+                    factory = FeedViewModelFactory(VibreeApplication.socialRepository)
+                )
+
+
                 Scaffold(
                     containerColor = MaterialTheme.colorScheme.background,
                     topBar = {
@@ -121,6 +134,8 @@ class MainActivity : ComponentActivity() {
                                             Screen.SETTINGS -> "Settings"
                                             Screen.HISTORY -> "History"
                                             Screen.EDIT_PROFILE -> "Edit Profile"
+                                            Screen.SOCIAL -> "Social Feed"
+                                            Screen.CREATE_POST -> "New Post"
                                             else -> ""
                                         },
                                         color = Color.White
@@ -178,7 +193,15 @@ class MainActivity : ComponentActivity() {
                                     onClick = { currentScreen = Screen.ACTIVITY },
                                     colors = NavigationBarItemDefaults.colors(selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink, indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple)
                                 )
+                                NavigationBarItem(
+                                    icon = { Icon(Icons.Filled.Face, contentDescription = "Social") },
+                                    label = { Text("Social") },
+                                    selected = currentScreen == Screen.SOCIAL,
+                                    onClick = { currentScreen = Screen.SOCIAL },
+                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = com.example.wearablecollector.ui.theme.VibreeNeonPink, indicatorColor = com.example.wearablecollector.ui.theme.VibreeDarkPurple)
+                                )
                             }
+
                         }
                     }
                 ) { innerPadding ->
@@ -236,8 +259,23 @@ class MainActivity : ComponentActivity() {
                             Screen.HISTORY -> HistoryScreen(
                                 onBack = { currentScreen = Screen.PROFILE }
                             )
+                            Screen.HISTORY -> HistoryScreen(
+                                onBack = { currentScreen = Screen.PROFILE }
+                            )
                             Screen.ACTIVITY -> PlaceholderScreen("Activity")
+                            Screen.SOCIAL -> SocialFeedScreen(
+                                viewModel = feedViewModel,
+                                onCreatePostClick = { currentScreen = Screen.CREATE_POST }
+                            )
+                            Screen.CREATE_POST -> CreatePostScreen(
+                                onPostCreated = { content, isPublic ->
+                                    feedViewModel.addPost(content, isPublic)
+                                    currentScreen = Screen.SOCIAL
+                                },
+                                onCancel = { currentScreen = Screen.SOCIAL }
+                            )
                         }
+
                     }
                 }
             }

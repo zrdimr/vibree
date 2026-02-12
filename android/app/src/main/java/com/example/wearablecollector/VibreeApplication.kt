@@ -7,6 +7,7 @@ import com.example.wearablecollector.data.AppDatabase
 class VibreeApplication : Application() {
     companion object {
         lateinit var database: AppDatabase
+        lateinit var socialRepository: com.example.wearablecollector.data.SocialRepository
     }
 
     override fun onCreate() {
@@ -14,9 +15,12 @@ class VibreeApplication : Application() {
         database = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "vibree-db"
-        ).build()
+        )
+        .fallbackToDestructiveMigration() // Simple migration strategy for dev
+        .build()
         
-        // Initialize Repository with DB
+        // Initialize Repositories
         SensorDataRepository.initialize(database.heartRateDao())
+        socialRepository = com.example.wearablecollector.data.SocialRepository(database.postDao())
     }
 }

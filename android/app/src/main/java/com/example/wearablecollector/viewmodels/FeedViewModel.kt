@@ -1,0 +1,51 @@
+package com.example.wearablecollector.viewmodels
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.wearablecollector.data.Post
+import com.example.wearablecollector.data.SocialRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+class FeedViewModel(private val repository: SocialRepository) : ViewModel() {
+
+    // Expose all posts as a StateFlow for Compose
+    val allPosts: StateFlow<List<Post>> = repository.allPosts
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+        
+    fun addPost(content: String, isPublic: Boolean) {
+        viewModelScope.launch {
+            val newPost = Post(
+                userId = "current_user", // Placeholder for Auth ID
+                content = content,
+                timestamp = System.currentTimeMillis(),
+                isPublic = isPublic,
+                stressScore = null // Will be updated by AI later
+            )
+            repository.addPost(newPost)
+        }
+    }
+
+    fun deletePost(post: Post) {
+        viewModelScope.launch {
+            repository.deletePost(post)
+        }
+    }
+}
+
+class FeedViewModelFactory(private val repository: SocialRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(FeedViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return FeedViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
