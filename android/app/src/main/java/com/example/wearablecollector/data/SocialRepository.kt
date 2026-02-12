@@ -9,12 +9,21 @@ class SocialRepository(private val postDao: PostDao) {
     val publicPosts: Flow<List<Post>> = postDao.getPublicPosts()
 
     suspend fun addPost(post: Post) {
-        // 1. Save to local DB first (Offline-first)
-        postDao.insert(post)
+        // 1. Run AI Analysis (on IO thread by default mostly, but good to be safe)
+        // In a real app with heavy model, use withContext(Dispatchers.Default)
+        val analysis = com.example.wearablecollector.logic.StressAnalyzer.analyze(post.content)
         
-        // 2. TODO: If public, sync to Firebase
-        if (post.isPublic) {
-            syncToCloud(post)
+        val analyzedPost = post.copy(
+            stressScore = analysis.stressScore,
+            sentiment = analysis.sentiment
+        )
+        
+        // 2. Save to local DB first (Offline-first)
+        postDao.insert(analyzedPost)
+        
+        // 3. TODO: If public, sync to Firebase
+        if (analyzedPost.isPublic) {
+            syncToCloud(analyzedPost)
         }
     }
 
