@@ -47,10 +47,10 @@ struct CreatePostView: View {
         newPost.timestamp = Date()
         newPost.isPublic = isPublic
         
-        // AI Analysis (Mock)
-        let analysis = StressAnalyzer.shared.analyze(text: content)
-        newPost.stressScore = analysis.stressScore
-        newPost.sentiment = analysis.sentiment
+        // AI Analysis using PyTorch MobileBERT Agent
+        let stressScore = StressAnalysisAgent.shared.analyzeText(content)
+        newPost.stressScore = Int32(stressScore)
+        newPost.sentiment = stressScore > 50 ? "Stressed" : "Normal"
         
         do {
             try viewContext.save()

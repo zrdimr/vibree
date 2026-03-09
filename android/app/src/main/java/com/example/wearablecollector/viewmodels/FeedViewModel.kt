@@ -22,12 +22,15 @@ class FeedViewModel(private val repository: SocialRepository) : ViewModel() {
         
     fun addPost(content: String, isPublic: Boolean) {
         viewModelScope.launch {
+            // Analyze stress from context before saving
+            val aiStressScore = com.example.wearablecollector.logic.StressAnalysisAgent.analyzeText(content)
+            
             val newPost = Post(
-                userId = "current_user", // Placeholder for Auth ID
+                userId = "current_user", 
                 content = content,
                 timestamp = System.currentTimeMillis(),
                 isPublic = isPublic,
-                stressScore = null // Will be updated by AI later
+                stressScore = if (aiStressScore != -1) aiStressScore else null
             )
             repository.addPost(newPost)
         }

@@ -95,6 +95,9 @@ class MainActivity : ComponentActivity() {
         bleManager = BleManager(this)
         checkPermissions()
         
+        // Initialize ML Models
+        com.example.wearablecollector.logic.StressAnalysisAgent.initialize(this)
+        
         // Initialize Auth
         val auth = FirebaseAuth.getInstance()
 

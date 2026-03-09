@@ -9,37 +9,58 @@
 /* Begin PBXBuildFile section */
 		0965924EC5CC9CC3A5B32132 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06C3A075027D495DA5B40D4 /* ContentView.swift */; };
 		1309C538F74F499A5C1C6F9D /* VibreeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D4F5671EC9E0AB6C7D23C2 /* VibreeApp.swift */; };
+		48DE567827269CFB59CF91D4 /* hrv_model.ptl in Resources */ = {isa = PBXBuildFile; fileRef = 4BA9653C5334BCF4A127C50D /* hrv_model.ptl */; };
 		5506F25825FA9AC7D7BE9E5E /* StressAnalysisAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F7198435BBCB7328EE5C252 /* StressAnalysisAgent.swift */; };
 		704D2A9684340E0D28C2EC2A /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA3A071174E2A37D18C706 /* PersistenceController.swift */; };
 		820579F6D258ADD2B034D6B0 /* Vibree.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EF1486A5875A8627F02BA07E /* Vibree.xcdatamodeld */; };
+		853AFFE87AEF1668D8D7CEA4 /* vocab.txt in Resources */ = {isa = PBXBuildFile; fileRef = BCE0408BDCB3BBF3C70E1F64 /* vocab.txt */; };
 		884758BB70A0D78E1D83D6E7 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B953E814A60FFE9AFDD93EDE /* DashboardView.swift */; };
 		88CB7A5D31B3759E23BE4D55 /* CreatePostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BB1F5100CDB88053ACA2FA /* CreatePostView.swift */; };
 		8B596BFC14B23A32C76DA944 /* StressCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B476B6CFAF34D1968C4E7E6 /* StressCalculator.swift */; };
 		9CAA3608088BA002636F8A9E /* StressAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279EDE9B6DFFC5C0ADC8EBA8 /* StressAnalyzer.swift */; };
+		A50345E7C249ED63A59EA628 /* nlp_model.ptl in Resources */ = {isa = PBXBuildFile; fileRef = C0F804CD2C3A0747E652639C /* nlp_model.ptl */; };
 		A6ED804878C2EAA0A6BDCCA7 /* LoadingLoginViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19DE7A4DBA0D3E821B0A9E8 /* LoadingLoginViews.swift */; };
 		B435FDEE186C64A0753AFE98 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EB5F95AEECE6E2B4A0923E /* ProfileView.swift */; };
 		D842F25BD29A8688EA262B8F /* SocialFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFE40E5E82EFBA3159AD088 /* SocialFeedView.swift */; };
 		DEBCA18EFBFD847410395449 /* SensorDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4685906C84D845B71AB66C87 /* SensorDataRepository.swift */; };
 		E6DF678F3E8C1CBD909EDD1E /* VitalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCFD5EEE7C1F8C2482E7892B /* VitalsView.swift */; };
+		F174C2E9C97DFD37D878911B /* Pods_Vibree.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6C3020266A9D76B166043D0 /* Pods_Vibree.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		08507055D6B7405C6912E100 /* Pods-Vibree.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vibree.release.xcconfig"; path = "Target Support Files/Pods-Vibree/Pods-Vibree.release.xcconfig"; sourceTree = "<group>"; };
 		0F7198435BBCB7328EE5C252 /* StressAnalysisAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressAnalysisAgent.swift; sourceTree = "<group>"; };
+		1B1061CBC2B34486A7C562CA /* Pods-Vibree.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vibree.debug.xcconfig"; path = "Target Support Files/Pods-Vibree/Pods-Vibree.debug.xcconfig"; sourceTree = "<group>"; };
 		279EDE9B6DFFC5C0ADC8EBA8 /* StressAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressAnalyzer.swift; sourceTree = "<group>"; };
 		33427EE91FB637CEED57D8ED /* Vibree.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Vibree.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39D4F5671EC9E0AB6C7D23C2 /* VibreeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibreeApp.swift; sourceTree = "<group>"; };
 		4685906C84D845B71AB66C87 /* SensorDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorDataRepository.swift; sourceTree = "<group>"; };
+		4BA9653C5334BCF4A127C50D /* hrv_model.ptl */ = {isa = PBXFileReference; path = hrv_model.ptl; sourceTree = "<group>"; };
 		50BB1F5100CDB88053ACA2FA /* CreatePostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostView.swift; sourceTree = "<group>"; };
 		7B476B6CFAF34D1968C4E7E6 /* StressCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressCalculator.swift; sourceTree = "<group>"; };
 		A7EB5F95AEECE6E2B4A0923E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		ADEA3A071174E2A37D18C706 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		AEFE40E5E82EFBA3159AD088 /* SocialFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialFeedView.swift; sourceTree = "<group>"; };
 		B953E814A60FFE9AFDD93EDE /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		BCE0408BDCB3BBF3C70E1F64 /* vocab.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = vocab.txt; sourceTree = "<group>"; };
 		C06C3A075027D495DA5B40D4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C0F804CD2C3A0747E652639C /* nlp_model.ptl */ = {isa = PBXFileReference; path = nlp_model.ptl; sourceTree = "<group>"; };
+		C6C3020266A9D76B166043D0 /* Pods_Vibree.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Vibree.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCFD5EEE7C1F8C2482E7892B /* VitalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalsView.swift; sourceTree = "<group>"; };
 		E422F3975862B838F7368965 /* Vibree.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Vibree.xcdatamodel; sourceTree = "<group>"; };
 		F19DE7A4DBA0D3E821B0A9E8 /* LoadingLoginViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingLoginViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FD43BAE3CE4D34867861C55B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F174C2E9C97DFD37D878911B /* Pods_Vibree.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		30E25C9A7E18E13C8E2633D5 /* Models */ = {
@@ -56,7 +77,17 @@
 			children = (
 				5B9492F3E895CDD2FC93EF8E /* Vibree */,
 				D3031C40E0FB92D5E96609D0 /* Products */,
+				ED916A2F64D2C362F0A33C13 /* Pods */,
+				4C50FDE740D3DE4C36F1C95F /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		4C50FDE740D3DE4C36F1C95F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C6C3020266A9D76B166043D0 /* Pods_Vibree.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		5B9492F3E895CDD2FC93EF8E /* Vibree */ = {
@@ -64,6 +95,7 @@
 			children = (
 				39D4F5671EC9E0AB6C7D23C2 /* VibreeApp.swift */,
 				30E25C9A7E18E13C8E2633D5 /* Models */,
+				A5829CDE748634A152C93BBB /* Resources */,
 				B61E6A2E7B8520001B4A9B53 /* Utils */,
 				64B1A399EED1624E2FA547EF /* ViewModels */,
 				C49596168422ACEABDDF83F2 /* Views */,
@@ -77,6 +109,16 @@
 				4685906C84D845B71AB66C87 /* SensorDataRepository.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A5829CDE748634A152C93BBB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4BA9653C5334BCF4A127C50D /* hrv_model.ptl */,
+				C0F804CD2C3A0747E652639C /* nlp_model.ptl */,
+				BCE0408BDCB3BBF3C70E1F64 /* vocab.txt */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		B61E6A2E7B8520001B4A9B53 /* Utils */ = {
@@ -111,6 +153,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		ED916A2F64D2C362F0A33C13 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1B1061CBC2B34486A7C562CA /* Pods-Vibree.debug.xcconfig */,
+				08507055D6B7405C6912E100 /* Pods-Vibree.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -118,15 +170,16 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2F5A26DE08D3305CC1FC5941 /* Build configuration list for PBXNativeTarget "Vibree" */;
 			buildPhases = (
+				B7D3ECFBE74E6C8DFB0F90C7 /* [CP] Check Pods Manifest.lock */,
 				DB7E558ABEAE2AF490D61EBE /* Sources */,
+				77BDDD4C9B135D3000B5614F /* Resources */,
+				FD43BAE3CE4D34867861C55B /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Vibree;
-			packageProductDependencies = (
-			);
 			productName = Vibree;
 			productReference = 33427EE91FB637CEED57D8ED /* Vibree.app */;
 			productType = "com.apple.product-type.application";
@@ -151,6 +204,7 @@
 			mainGroup = 4543B7480439E1E98BD191CA;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
+			productRefGroup = D3031C40E0FB92D5E96609D0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -158,6 +212,44 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		77BDDD4C9B135D3000B5614F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48DE567827269CFB59CF91D4 /* hrv_model.ptl in Resources */,
+				A50345E7C249ED63A59EA628 /* nlp_model.ptl in Resources */,
+				853AFFE87AEF1668D8D7CEA4 /* vocab.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B7D3ECFBE74E6C8DFB0F90C7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Vibree-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DB7E558ABEAE2AF490D61EBE /* Sources */ = {
@@ -248,6 +340,7 @@
 		};
 		6CE57090116C27AE10EF50A1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B1061CBC2B34486A7C562CA /* Pods-Vibree.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -265,6 +358,7 @@
 		};
 		BFC5A66D33590311922F517D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 08507055D6B7405C6912E100 /* Pods-Vibree.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

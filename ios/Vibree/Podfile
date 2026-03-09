@@ -1,0 +1,6 @@
+platform :ios, '15.0'
+
+target 'Vibree' do
+  use_frameworks!
+  pod 'LibTorch-Lite'
+end
