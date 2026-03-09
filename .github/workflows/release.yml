@@ -1,0 +1,56 @@
+name: Android Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Build and Release Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
+
+      - name: Download ML Models from Google Drive
+        run: |
+          pip install gdown
+          mkdir -p android/app/src/main/assets
+          gdown "1Gbtipohnlm3MUqr6q3A2-9XPqSmF1b4r" -O android/app/src/main/assets/hrv_model.ptl
+          gdown "1Pm1AHtSkY5lyx4KEvIvpPl3jCCN3mcXS" -O android/app/src/main/assets/nlp_model.ptl
+          gdown "1dQVTk5MRrYivX5QLv-nCj46UFRIn9qtT" -O android/app/src/main/assets/vocab.txt
+
+      - name: Generate Gradle Wrapper
+        working-directory: ./android
+        run: gradle wrapper --gradle-version 8.5
+
+      - name: Build Release APK
+        working-directory: ./android
+        run: ./gradlew :app:assembleRelease
+
+      - name: Rename APK
+        run: mv android/app/build/outputs/apk/release/app-release-unsigned.apk Vibree.apk
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Vibree.apk
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
