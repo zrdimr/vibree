@@ -34,13 +34,13 @@ jobs:
         gdown "1dQVTk5MRrYivX5QLv-nCj46UFRIn9qtT" -O android/app/src/main/assets/vocab.txt
         ls -lh android/app/src/main/assets/
 
-    - name: Print Signing Report (SHA-1)
+    - name: Generate Gradle Wrapper
       working-directory: ./android
-      run: gradle signingReport
+      run: gradle wrapper --gradle-version 8.5
 
     - name: Build with Gradle
       working-directory: ./android
-      run: gradle :app:assembleDebug
+      run: ./gradlew :app:assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4

@@ -29,22 +29,19 @@ jobs:
           gdown "1dQVTk5MRrYivX5QLv-nCj46UFRIn9qtT" -O ios/Vibree/Vibree/Resources/vocab.txt
           ls -lh ios/Vibree/Vibree/Resources/
 
-      - name: Install CocoaPods
-        run: |
-          sudo gem install cocoapods
-          cd ios/Vibree
-          pod install
-
       - name: Build
         run: |
           # Install XcodeGen
           brew install xcodegen
           
-          # Navigate to iOS directory and generate project
+          # 1. Generate Xcode project FIRST
           cd ios/Vibree
           xcodegen generate
           
-          # Build using xcworkspace (required after pod install)
+          # 2. Install CocoaPods AFTER xcodegen (so Pods integrate into the generated project)
+          pod install
+          
+          # 3. Build using xcworkspace (created by pod install)
           xcodebuild -workspace Vibree.xcworkspace \
             -scheme Vibree \
             -configuration Debug \

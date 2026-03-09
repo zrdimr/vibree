@@ -30,7 +30,7 @@ class FeedViewModel(private val repository: SocialRepository) : ViewModel() {
                 content = content,
                 timestamp = System.currentTimeMillis(),
                 isPublic = isPublic,
-                stressScore = if (aiStressScore != -1) aiStressScore else null
+                stressScore = if (aiStressScore != -1) aiStressScore.toFloat() else null
             )
             repository.addPost(newPost)
         }
