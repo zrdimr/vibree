@@ -49,7 +49,7 @@ struct CreatePostView: View {
         
         // AI Analysis using PyTorch MobileBERT Agent
         let stressScore = StressAnalysisAgent.shared.analyzeText(content)
-        newPost.stressScore = Int32(stressScore)
+        newPost.stressScore = Float(stressScore)
         newPost.sentiment = stressScore > 50 ? "Stressed" : "Normal"
         
         do {
