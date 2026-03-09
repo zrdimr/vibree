@@ -20,6 +20,19 @@ jobs:
         with:
           xcode-version: latest-stable
 
+      - name: Download ML Models from Google Drive
+        run: |
+          pip3 install gdown
+          mkdir -p ios/Vibree/Vibree/Resources
+          gdown --folder "https://drive.google.com/drive/folders/1d98rkSHzgCMmno-bByosKGhDYkCiKU4o" -O ios/Vibree/Vibree/Resources --remaining-ok
+          ls -lh ios/Vibree/Vibree/Resources/
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          cd ios/Vibree
+          pod install
+
       - name: Build
         run: |
           # Install XcodeGen
@@ -29,10 +42,8 @@ jobs:
           cd ios/Vibree
           xcodegen generate
           
-          # Build App for Simulator (Unsigned)
-          # Use 'Debug' configuration and a simulator destination to verify build and produce an app bundle
-          # Using 'iPhone 16 Pro' as 'iPhone 15' was not found in the runner environment
-          xcodebuild -project Vibree.xcodeproj \
+          # Build using xcworkspace (required after pod install)
+          xcodebuild -workspace Vibree.xcworkspace \
             -scheme Vibree \
             -configuration Debug \
             -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \

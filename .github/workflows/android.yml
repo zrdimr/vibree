@@ -25,6 +25,13 @@ jobs:
       with:
         gradle-version: '8.5'
 
+    - name: Download ML Models from Google Drive
+      run: |
+        pip install gdown
+        mkdir -p android/app/src/main/assets
+        gdown --folder "https://drive.google.com/drive/folders/1d98rkSHzgCMmno-bByosKGhDYkCiKU4o" -O android/app/src/main/assets --remaining-ok
+        ls -lh android/app/src/main/assets/
+
     - name: Print Signing Report (SHA-1)
       working-directory: ./android
       run: gradle signingReport
