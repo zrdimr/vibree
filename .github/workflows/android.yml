@@ -29,7 +29,9 @@ jobs:
       run: |
         pip install gdown
         mkdir -p android/app/src/main/assets
-        gdown --folder "https://drive.google.com/drive/folders/1d98rkSHzgCMmno-bByosKGhDYkCiKU4o" -O android/app/src/main/assets --remaining-ok
+        gdown "1Gbtipohnlm3MUqr6q3A2-9XPqSmF1b4r" -O android/app/src/main/assets/hrv_model.ptl
+        gdown "1Pm1AHtSkY5lyx4KEvIvpPl3jCCN3mcXS" -O android/app/src/main/assets/nlp_model.ptl
+        gdown "1dQVTk5MRrYivX5QLv-nCj46UFRIn9qtT" -O android/app/src/main/assets/vocab.txt
         ls -lh android/app/src/main/assets/
 
     - name: Print Signing Report (SHA-1)

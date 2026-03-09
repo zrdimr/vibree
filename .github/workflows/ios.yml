@@ -24,7 +24,9 @@ jobs:
         run: |
           pip3 install gdown
           mkdir -p ios/Vibree/Vibree/Resources
-          gdown --folder "https://drive.google.com/drive/folders/1d98rkSHzgCMmno-bByosKGhDYkCiKU4o" -O ios/Vibree/Vibree/Resources --remaining-ok
+          gdown "1Gbtipohnlm3MUqr6q3A2-9XPqSmF1b4r" -O ios/Vibree/Vibree/Resources/hrv_model.ptl
+          gdown "1Pm1AHtSkY5lyx4KEvIvpPl3jCCN3mcXS" -O ios/Vibree/Vibree/Resources/nlp_model.ptl
+          gdown "1dQVTk5MRrYivX5QLv-nCj46UFRIn9qtT" -O ios/Vibree/Vibree/Resources/vocab.txt
           ls -lh ios/Vibree/Vibree/Resources/
 
       - name: Install CocoaPods
