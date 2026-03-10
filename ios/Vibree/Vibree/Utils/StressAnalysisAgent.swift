@@ -85,7 +85,7 @@ class StressAnalysisAgent {
     func analyzeText(_ text: String) -> Int {
         let (ids, mask) = tokenizer.tokenize(text)
         
-        if let module = nlpModule, let output = module.predictNLP(withIds: ids as [NSNumber], mask: mask as [NSNumber]) {
+        if let module = nlpModule, let output = module.predictNLPWithIds(ids as [NSNumber], mask: mask as [NSNumber]) {
             if output.count >= 2 {
                 let nonStress = output[0].floatValue
                 let stress = output[1].floatValue
