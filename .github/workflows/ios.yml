@@ -47,10 +47,22 @@ jobs:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO > xcodebuild.log 2>&1 || { tail -n 500 xcodebuild.log; exit 1; }
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO > xcodebuild.log 2>&1 || { tail -n 500 xcodebuild.log; cp xcodebuild.log /tmp/xcodebuild.log; exit 1; }
             
       - name: Upload App
         uses: actions/upload-artifact@v4
         with:
           name: Vibree.app
           path: ios/Vibree/build/Build/Products/Debug-iphonesimulator/Vibree.app
+
+      - name: Commit Logs on Failure
+        if: failure()
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git reset --hard
+          git checkout -B debug-logs
+          cp /tmp/xcodebuild.log .
+          git add xcodebuild.log
+          git commit -m "Upload xcodebuild log"
+          git push -f origin debug-logs
