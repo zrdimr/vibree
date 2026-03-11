@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build and Test
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
       - name: Checkout
@@ -51,7 +51,7 @@ jobs:
             -derivedDataPath build \
             CLANG_CXX_LANGUAGE_STANDARD="c++17" \
             CLANG_CXX_LIBRARY="libc++" \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO > xcodebuild.log 2>&1 || { tail -n 200 xcodebuild.log; exit 1; }
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO > xcodebuild.log 2>&1 || { tail -n 1000 xcodebuild.log; exit 1; }
             
       - name: Upload Build Logs
         if: failure()
