@@ -2,7 +2,7 @@ platform :ios, '15.0'
 
 target 'Vibree' do
   use_frameworks!
-  pod 'LibTorch-Lite'
+  pod 'LibTorch-Lite', '1.13.0.1'
 end
 
 post_install do |installer|
