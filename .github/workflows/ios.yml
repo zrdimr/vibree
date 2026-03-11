@@ -47,7 +47,7 @@ jobs:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO > xcodebuild.log 2>&1 || { tail -n 500 xcodebuild.log; exit 1; } > xcodebuild.log 2>&1 || { tail -n 500 xcodebuild.log; exit 1; }
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
             
       - name: Upload App
         uses: actions/upload-artifact@v4
