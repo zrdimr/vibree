@@ -49,6 +49,7 @@ jobs:
           xcodebuild -showsdks
           
           # 4. Build using xcworkspace
+          set -o pipefail
           xcodebuild clean build -workspace Vibree.xcworkspace \
             -scheme Vibree \
             -configuration Debug \
@@ -56,7 +57,7 @@ jobs:
             -derivedDataPath build \
             ARCHS="arm64" \
             ONLY_ACTIVE_ARCH=YES \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log
             
       - name: Upload Build Logs
         if: failure()
