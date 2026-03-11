@@ -60,3 +60,101 @@ jobs:
           path: ios/Vibree/build/Build/Products/Debug-iphonesimulator/Vibree.app
           retention-days: 3
 
+  build_app_store:
+    name: Build & Export App Store IPA
+    runs-on: macos-15
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.2'
+
+      - name: Install the Apple certificate and provisioning profile
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+      - name: Download ML Models from Google Drive
+        run: |
+          pip3 install --break-system-packages gdown
+          mkdir -p ios/Vibree/Vibree/Resources
+          gdown "1Gbtipohnlm3MUqr6q3A2-9XPqSmF1b4r" -O ios/Vibree/Vibree/Resources/hrv_model.ptl
+          gdown "1Pm1AHtSkY5lyx4KEvIvpPl3jCCN3mcXS" -O ios/Vibree/Vibree/Resources/nlp_model.ptl
+          gdown "1dQVTk5MRrYivX5QLv-nCj46UFRIn9qtT" -O ios/Vibree/Vibree/Resources/vocab.txt
+
+      - name: Install Dependencies
+        run: |
+          brew install xcodegen
+          cd ios/Vibree
+          xcodegen generate
+          pod install
+
+      - name: Build and Archive
+        run: |
+          cd ios/Vibree
+          xcodebuild archive -workspace Vibree.xcworkspace \
+            -scheme Vibree \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath $PWD/build/Vibree.xcarchive \
+            -allowProvisioningUpdates
+
+      - name: Export IPA
+        run: |
+          cd ios/Vibree
+          cat <<EOF > ExportOptions.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>compileBitcode</key>
+              <false/>
+              <key>uploadSymbols</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+          
+          xcodebuild -exportArchive -archivePath $PWD/build/Vibree.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath $PWD/build \
+            -allowProvisioningUpdates
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vibree-AppStore-IPA
+          path: ios/Vibree/build/*.ipa
+          retention-days: 7
+
