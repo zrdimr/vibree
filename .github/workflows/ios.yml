@@ -119,12 +119,12 @@ jobs:
           path: ios/Vibree/Vibree-iOS.ipa
           retention-days: 7
 
-      - name: Create GitHub Release
+      - name: Upload to GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ios/Vibree/Vibree-iOS.ipa
-          name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd ios/Vibree
+          gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name }}" --notes "Automated GitHub Release" || true
+          gh release upload ${{ github.ref_name }} Vibree-iOS.ipa --clobber
 
