@@ -45,7 +45,7 @@ jobs:
         run: |
           cd ios/Vibree
           set -o pipefail
-          xcodebuild clean build -workspace Vibree.xcworkspace \
+          arch -x86_64 xcodebuild clean build -workspace Vibree.xcworkspace \
             -scheme Vibree \
             -configuration Debug \
             -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation)' \
