@@ -26,5 +26,11 @@ targets:
           - $(inherited)
         OTHER_LDFLAGS: 
           - $(inherited)
+        OTHER_CFLAGS:
+          - $(inherited)
+          - "-std=c++17"
+        OTHER_CPLUSPLUSFLAGS:
+          - $(inherited)
+          - "-std=c++17"
         GCC_PREPROCESSOR_DEFINITIONS: 
           - $(inherited)
