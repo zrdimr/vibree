@@ -18,15 +18,11 @@ targets:
         SWIFT_VERSION: 5
         CLANG_CXX_LANGUAGE_STANDARD: "gnu++17"
         CLANG_CXX_LIBRARY: "libc++"
-        ARCHS: "arm64"
-        ONLY_ACTIVE_ARCH: YES
-        "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "x86_64"
+        ARCHS: "$(ARCHS_STANDARD)"
+        ONLY_ACTIVE_ARCH: NO
+        "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
         SWIFT_OBJC_BRIDGING_HEADER: Vibree/Vibree-Bridging-Header.h
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
-        HEADER_SEARCH_PATHS: 
-          - $(inherited)
-        LIBRARY_SEARCH_PATHS: 
-          - $(inherited)
         OTHER_LDFLAGS: 
           - $(inherited)
         OTHER_CFLAGS:
