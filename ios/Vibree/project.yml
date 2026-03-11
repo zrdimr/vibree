@@ -41,3 +41,14 @@ targets:
           - "-std=c++17"
         GCC_PREPROCESSOR_DEFINITIONS: 
           - $(inherited)
+schemes:
+  Vibree:
+    build:
+      targets:
+        Vibree: [all]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - Vibree

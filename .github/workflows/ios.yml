@@ -1,19 +1,21 @@
-# Build Trigger
-name: iOS Build
+name: "Build iOS app"
 
 on:
   push:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build and Test
+    name: Build Vibree
     runs-on: macos-14
-
     steps:
-      - name: Checkout
+      - name: check Xcode version
+        run: /usr/bin/xcodebuild -version
+
+      - name: checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Xcode
@@ -30,54 +32,38 @@ jobs:
           gdown "1dQVTk5MRrYivX5QLv-nCj46UFRIn9qtT" -O ios/Vibree/Vibree/Resources/vocab.txt
           ls -lh ios/Vibree/Vibree/Resources/
 
-      - name: Build
+      - name: Install Dependencies
         run: |
-          # Install XcodeGen
           brew install xcodegen
-          
-          # 1. Generate Xcode project FIRST
           cd ios/Vibree
           xcodegen generate
-          
-          # 2. Add explicit wipe of DerivedData and Pods cache
-          rm -rf ~/Library/Developer/Xcode/DerivedData
           pod cache clean --all
           pod install
-          
-          # 3. Environment Diagnostics
-          xcodebuild -version
-          xcodebuild -showsdks
-          
-          # 4. Build using xcworkspace
-          set -o pipefail
+
+      - name: Build for Simulator
+        id: build_simulator
+        run: |
+          cd ios/Vibree
+          # Attempt to build for iPhone 16, fallback to 15
           xcodebuild clean build -workspace Vibree.xcworkspace \
             -scheme Vibree \
             -configuration Debug \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath build \
-            ARCHS="arm64" \
-            ONLY_ACTIVE_ARCH=YES \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log || { 
-              echo "iPhone 16 not found, falling back to iPhone 15"
-              xcodebuild clean build -workspace Vibree.xcworkspace \
-                -scheme Vibree \
-                -configuration Debug \
-                -destination 'platform=iOS Simulator,name=iPhone 15' \
-                -derivedDataPath build \
-                ARCHS="arm64" \
-                ONLY_ACTIVE_ARCH=YES \
-                CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log || { cat xcodebuild.log; exit 1; }
-            }
-            
-      - name: Upload Build Logs
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: xcodebuild-logs
-          path: ios/Vibree/xcodebuild.log
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO || \
+          xcodebuild clean build -workspace Vibree.xcworkspace \
+            -scheme Vibree \
+            -configuration Debug \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
 
-      - name: Upload App
+      - name: Upload application
         uses: actions/upload-artifact@v4
         with:
-          name: Vibree.app
+          name: Vibree-Simulator-App
           path: ios/Vibree/build/Build/Products/Debug-iphonesimulator/Vibree.app
+          retention-days: 3
+
