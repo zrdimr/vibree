@@ -38,7 +38,9 @@ jobs:
           cd ios/Vibree
           xcodegen generate
           
-          # 2. Install CocoaPods AFTER xcodegen (so Pods integrate into the generated project)
+          # 2. Add explicit wipe of DerivedData and Pods cache
+          rm -rf ~/Library/Developer/Xcode/DerivedData
+          pod cache clean --all
           pod install
           
           # 3. Build using xcworkspace (created by pod install)
