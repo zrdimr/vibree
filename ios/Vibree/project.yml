@@ -1,6 +1,6 @@
 name: Vibree
 options:
-  bundleIdPrefix: com.example
+  bundleIdPrefix: com.zrdimr
 targets:
   Vibree:
     type: application
