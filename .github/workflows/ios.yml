@@ -45,20 +45,10 @@ jobs:
         run: |
           cd ios/Vibree
           set -o pipefail
-          # Attempt to build for iPhone 16 (on x86_64 to match LibTorch-Lite slice)
           xcodebuild clean build -workspace Vibree.xcworkspace \
             -scheme Vibree \
             -configuration Debug \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
-            -arch x86_64 \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log || \
-          xcodebuild clean build -workspace Vibree.xcworkspace \
-            -scheme Vibree \
-            -configuration Debug \
-            -destination 'platform=iOS Simulator,name=iPhone 17' \
-            -arch x86_64 \
+            -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation)' \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log || { cat xcodebuild.log; exit 1; }
