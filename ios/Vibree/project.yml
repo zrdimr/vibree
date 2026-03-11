@@ -20,6 +20,7 @@ targets:
         CLANG_CXX_LIBRARY: "libc++"
         ONLY_ACTIVE_ARCH: NO
         "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
         SWIFT_OBJC_BRIDGING_HEADER: Vibree/Vibree-Bridging-Header.h
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
         OTHER_LDFLAGS: 
