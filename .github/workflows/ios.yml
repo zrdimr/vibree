@@ -110,20 +110,20 @@ jobs:
           cd ios/Vibree
           mkdir -p Payload
           cp -r build/Build/Products/Release-iphoneos/Vibree.app Payload/
-          zip -qr Vibree-unsigned.ipa Payload
+          zip -qr Vibree-iOS.ipa Payload
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Vibree-Unsigned-IPA
-          path: ios/Vibree/Vibree-unsigned.ipa
+          name: Vibree-iOS-IPA
+          path: ios/Vibree/Vibree-iOS.ipa
           retention-days: 7
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: ios/Vibree/Vibree-unsigned.ipa
+          files: ios/Vibree/Vibree-iOS.ipa
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false

@@ -47,18 +47,21 @@ jobs:
       working-directory: ./android
       run: ./gradlew :app:assembleRelease
 
+    - name: Rename APK
+      run: mv android/app/build/outputs/apk/release/app-release-unsigned.apk Vibree-Android.apk
+
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Vibree-Android-APK
-        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+        path: Vibree-Android.apk
         retention-days: 7
 
     - name: Create GitHub Release
       if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v2
       with:
-        files: android/app/build/outputs/apk/release/app-release-unsigned.apk
+        files: Vibree-Android.apk
         name: Release ${{ github.ref_name }}
         draft: false
         prerelease: false
