@@ -46,14 +46,14 @@
         at::Tensor idsTensor = torch::ones({1, 128}, at::kLong);
         at::Tensor maskTensor = torch::ones({1, 128}, at::kLong);
         
-        long* idsData = idsTensor.data_ptr<long>();
-        long* maskData = maskTensor.data_ptr<long>();
+        int64_t* idsData = idsTensor.data_ptr<int64_t>();
+        int64_t* maskData = maskTensor.data_ptr<int64_t>();
         
         for (int i = 0; i < MIN(inputIds.count, 128); i++) {
-            idsData[i] = [inputIds[i] longValue];
+            idsData[i] = (int64_t)[inputIds[i] longLongValue];
         }
         for (int i = 0; i < MIN(mask.count, 128); i++) {
-            maskData[i] = [mask[i] longValue];
+            maskData[i] = (int64_t)[mask[i] longLongValue];
         }
         
         auto outputTensor = _impl.forward({idsTensor, maskTensor}).toTensor();
