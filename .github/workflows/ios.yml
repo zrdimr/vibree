@@ -44,6 +44,7 @@ jobs:
         id: build_simulator
         run: |
           cd ios/Vibree
+          set -o pipefail
           # Attempt to build for iPhone 16, fallback to 15
           xcodebuild clean build -workspace Vibree.xcworkspace \
             -scheme Vibree \
@@ -51,14 +52,14 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO || \
+            CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log || \
           xcodebuild clean build -workspace Vibree.xcworkspace \
             -scheme Vibree \
             -configuration Debug \
             -destination 'platform=iOS Simulator,name=iPhone 15' \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO
+            CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log || { cat xcodebuild.log; exit 1; }
 
       - name: Upload application
         uses: actions/upload-artifact@v4
