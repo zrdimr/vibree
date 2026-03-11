@@ -49,6 +49,8 @@ jobs:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build \
+            CLANG_CXX_LANGUAGE_STANDARD="c++17" \
+            CLANG_CXX_LIBRARY="libc++" \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
             
       - name: Upload App
