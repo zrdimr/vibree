@@ -16,10 +16,11 @@ targets:
     settings:
       base:
         SWIFT_VERSION: 5
-        "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "x86_64"
-        ONLY_ACTIVE_ARCH: YES
         CLANG_CXX_LANGUAGE_STANDARD: "c++17"
         CLANG_CXX_LIBRARY: "libc++"
+        ARCHS: "$(ARCHS_STANDARD)"
+        ONLY_ACTIVE_ARCH: NO
+        "EXCLUDED_ARCHS[sdk=iphonesimulator*]": ""
         SWIFT_OBJC_BRIDGING_HEADER: Vibree/Vibree-Bridging-Header.h
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
         HEADER_SEARCH_PATHS: 
