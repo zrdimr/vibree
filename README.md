@@ -14,7 +14,7 @@ Vibree is an advanced, cross-platform wearable data collection and stress-analys
 - **Physiological Monitoring**: Real-time integration with wearable sensors to track metrics like Heart Rate Variability (HRV), Blood Volume Pulse (BVP), and Electrodermal Activity (EDA).
 - **On-Device Edge AI**: Utilizes heavily optimized `MobileBERT` via `LibTorch-Lite` to perform sub-second text-based stress inference strictly on-device.
 - **Cross-Platform Extraction**: Deployed natively to both iOS and Android platforms, ensuring high-performance execution of complex Deep Learning pipelines.
-- **"Tempat Curhat" Social Feed**: A robust, core-data/room driven localized diary and journaling platform evaluated instantly by the offline NLP analysis module.
+- **Social Feed**: A robust, core-data/room driven localized diary and journaling platform evaluated instantly by the offline NLP analysis module.
 
 ## 🏗️ Architecture
 

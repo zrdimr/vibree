@@ -42,7 +42,7 @@ struct SocialFeedView: View {
                     }
                 }
             }
-            .navigationTitle("Tempat Curhat")
+            .navigationTitle("Social Feed")
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()
             }

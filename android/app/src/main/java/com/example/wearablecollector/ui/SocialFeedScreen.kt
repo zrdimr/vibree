@@ -27,7 +27,7 @@ fun SocialFeedScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Tempat Curhat") })
+            TopAppBar(title = { Text("Social Feed") })
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onCreatePostClick) {

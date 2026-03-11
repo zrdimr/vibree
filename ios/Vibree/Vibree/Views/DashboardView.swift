@@ -54,7 +54,7 @@ struct DashboardView: View {
                     }
                     
                     Button(action: onNavigateToSocial) {
-                        Text("Tempat Curhat (Social)")
+                        Text("Social Feed")
                             .font(.headline)
                             .foregroundColor(.white)
                             .padding()

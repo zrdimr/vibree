@@ -23,4 +23,4 @@ Please do **NOT** report it by creating a public GitHub issue. Instead, send an 
 We will acknowledge your email within 48 hours, and you will receive a more detailed response outlining the next steps in reproducing, triaging, and mitigating the vulnerability. Once the issue is resolved, we will publish a patch alongside a security advisory if community users need to take action.
 
 **Important Data Handling Principles:**
-Vibree is fundamentally an **Edge AI** platform. Under absolutely no circumstance should raw Natural Language Processing inputs ("Tempat Curhat" journals) or biometrics be transmitted off-device to unverified cloud hosts. The `MobileBERT` implementation is designed to keep all text inference securely offline. Any PR breaking this air-gap architecture will be rejected.
+Vibree is fundamentally an **Edge AI** platform. Under absolutely no circumstance should raw Natural Language Processing inputs ("Social Feed" journals) or biometrics be transmitted off-device to unverified cloud hosts. The `MobileBERT` implementation is designed to keep all text inference securely offline. Any PR breaking this air-gap architecture will be rejected.
