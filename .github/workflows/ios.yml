@@ -57,7 +57,7 @@ jobs:
             -derivedDataPath build \
             ARCHS="arm64" \
             ONLY_ACTIVE_ARCH=YES \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log || { cat xcodebuild.log; exit 1; }
             
       - name: Upload Build Logs
         if: failure()
