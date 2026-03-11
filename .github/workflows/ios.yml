@@ -54,6 +54,17 @@ jobs:
             CLANG_CXX_LIBRARY="libc++" \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO > xcodebuild.log 2>&1 || { tail -n 200 xcodebuild.log; exit 1; }
             
+      - name: Push Build Logs on Failure
+        if: failure()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b build-logs || git checkout build-logs
+          cp ios/Vibree/xcodebuild.log .
+          git add xcodebuild.log
+          git commit -m "chore(logs): save failed build log"
+          git push -f origin build-logs
+
       - name: Upload App
         uses: actions/upload-artifact@v4
         with:
