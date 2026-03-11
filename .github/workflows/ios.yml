@@ -48,7 +48,7 @@ jobs:
           xcodebuild clean build -workspace Vibree.xcworkspace \
             -scheme Vibree \
             -configuration Debug \
-            -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation)' \
+            -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO 2>&1 | tee xcodebuild.log || { cat xcodebuild.log; exit 1; }
