@@ -1,41 +1,37 @@
 # Contributing to Vibree
 
-First off, thanks for taking the time to contribute! 🎉
+Welcome! We love your input and want to make contributing to this repository as easy and transparent as possible.
 
-The following is a set of guidelines for contributing to Vibree. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+Whether you're helping us optimize our LibTorch mobile pipelines, refining our Kotlin Coroutine architecture, or suggesting UI/UX improvements, your help is appreciated.
 
-## How Can I Contribute?
+## Contribution Workflow
 
-### Reporting Bugs
+We generally follow a "fork-and-pull" Git workflow.
 
-This section guides you through submitting a bug report.
-*   **Use the Issue Config**: Open a new issue and select "Bug Report".
-*   **Describe the bug**: Use the template provided to clearly explain the issue.
-*   **Reproduce**: Provide steps to reproduce the behavior.
+### 1. Branching
+1. Fork the repo into your GitHub account.
+2. Clone your fork locally using `git clone https://github.com/your-username/vibree.git`.
+3. Choose the appropriate project path (`cd ios/Vibree` or `cd android`).
+4. Create a new branch reflecting the feature you're adding (e.g. `feat/improve-eda-sampling` or `fix/nlp-crashes`).
 
-### Suggesting Enhancements
+### 2. Development & Standards
+- Ensure you adhere to **SwiftLint** on iOS and **Ktlint** on Android.
+- When committing, try to use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) formats, e.g. `feat(android): add heart rate streaming abstraction`.
+- **Testing**: While unit testing might be difficult on hardware-coupled features, any new modules specifically dealing with `.ptl` (Model Inference) or data structures must be accompanied by relevant test assertions.
 
-This section guides you through submitting an enhancement suggestion.
-*   **Use the Issue Config**: Open a new issue and select "Feature Request".
-*   **Describe the feature**: Explain why this feature would be useful.
+### 3. Integrating AI Models
+If your PR touches the NLP or HRV processing logic, you **must not** commit the actual `.ptl` weight sizes. PyTorch Mobile `.ptl` files exceed GitHub repository limits and should be loaded dynamically using the automated Google Drive script defined in our `.github/workflows/`. Instead, simply refer to their specific layer architectures in your Pull Request description.
 
-### Pull Requests
+### 4. Creating a Pull Request
+1. Commit your changes and push them to your fork.
+2. Open a Pull Request from your branch into the `main` branch of the upstream Vibree repository.
+3. Your code will undergo the mandatory GitHub Actions checks for both iOS and Android. Ensure these checks pass (green) before requesting a review.
 
-*   Fork the repo and create your branch from `main`.
-*   If you've added code that should be tested, add tests.
-*   Ensure the test suite passes.
-*   Make sure your code lints.
-*   Issue that pull request!
+## Reporting Issues 🐛
 
-## Styleguides
+Use GitHub Issues to report bugs or request features. When filing a bug:
+- Provide clear steps to reproduce the crash.
+- Include log outputs (e.g., Xcode debug symbols or LogCat traces).
+- Detail your local development environment (OS version, Xcode/Android Studio version, Physical Device vs Simulator).
 
-### Kotlin Style
-
-*   We follow the [Android Kotlin Style Guide](https://developer.android.com/kotlin/style-guide).
-*   Use `ktlint` to verify your code before committing.
-
-### Git Messages
-
-*   Use the present tense ("Add feature" not "Added feature").
-*   Use the imperative mood ("Move cursor to..." not "Moves cursor to...").
-*   Limit the first line to 72 characters or less.
+Thank you for contributing to the future of Edge-AI physiological health!

@@ -1,64 +1,55 @@
-# Vibree - Wearable Data Collector
+# Vibree 🌿
 
-Vibree is a modern Android and iOS application designed to collect, visualize, and analyze physiological and psychological data from wearable devices and user inputs. It features a mindful, aesthetically pleasing interface with advanced on-device AI for real-time stress detection.
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-iOS%20%7C%20Android-green.svg" alt="Platform" />
+  <img src="https://img.shields.io/badge/Language-Swift%20%7C%20Kotlin-orange.svg" alt="Language" />
+  <img src="https://img.shields.io/badge/AI-LibTorch%20%7C%20PyTorch-red.svg" alt="AI Framework" />
+  <img src="https://img.shields.io/badge/v1.0.0-Release-blue.svg" alt="Version 1.0.0" />
+</p>
 
-## 🎯 Project Goals
+Vibree is an advanced, cross-platform wearable data collection and stress-analysis application. Designed around privacy-first edge intelligence, Vibree allows users to monitor their physiological metrics and perform cutting-edge Natural Language Processing (NLP) stress analysis directly on their device without relying on external cloud processing.
 
-*   **Real-time Monitoring**: Connect to standard BLE Heart Rate monitors to view live data.
-*   **Edge AI Inference**: Uses on-device PyTorch Mobile (LibTorch-Lite) to run complex models locally without an internet connection, ensuring absolute privacy.
-*   **Multimodal Stress Analysis**:
-    *   **Physiological (CNN-LSTM)**: Analyzes Heart Rate Variability (HRV) patterns to calculate physical stress levels.
-    *   **Psychological (MobileBERT)**: Features a built-in NLP agent that reads user journal entries ("Tempat Curhat") and identifies mental stress.
-*   **Mindful Design**: Focus on calming, glassmorphic UI to reduce user anxiety while monitoring vitals.
-*   **Privacy First**: All data is stored locally on the device using Room Database (Android) / CoreData (iOS).
+## 🔥 Key Features
 
-## ✨ Features
+- **Physiological Monitoring**: Real-time integration with wearable sensors to track metrics like Heart Rate Variability (HRV), Blood Volume Pulse (BVP), and Electrodermal Activity (EDA).
+- **On-Device Edge AI**: Utilizes heavily optimized `MobileBERT` via `LibTorch-Lite` to perform sub-second text-based stress inference strictly on-device.
+- **Cross-Platform Extraction**: Deployed natively to both iOS and Android platforms, ensuring high-performance execution of complex Deep Learning pipelines.
+- **"Tempat Curhat" Social Feed**: A robust, core-data/room driven localized diary and journaling platform evaluated instantly by the offline NLP analysis module.
 
-*   **Bluetooth Low Energy (BLE)**: Seamless scanning and connection to HR sensors.
-*   **Local Social Feed**: Private journaling area where the "Vibree AI" agent analyzes your thoughts for stress.
-*   **Live Dashboard**: Interactive heartbeat visualization and status indicators.
-*   **Vitals Tracking**: Detailed view of Stress and HRV trends.
-*   **Machine Learning Models**:
-    *   **CNN+LSTM**: `hrv_model.ptl` for temporal physiological patterns.
-    *   **MobileBERT**: `nlp_model.ptl` for natural language understanding.
+## 🏗️ Architecture
+
+Vibree's inference engine operates fundamentally offline, loading custom serialized PyTorch Script modules (`.ptl`) into standard inference pipelines:
+
+1. **HRV Pipeline**: Processes wearable signals via quantized Multi-Layer Perceptrons.
+2. **NLP Pipeline**: `MobileBERT-LSTM-CRF` architecture evaluating user input sequences through custom WordPiece tokenization matching standard BERT vocabularies.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+- **iOS**: macOS Sequoia (15+), Xcode 16.2+, CocoaPods, Homebrew (`brew install xcodegen`). 
+- **Android**: JDK 17, Android Studio Giraffe+ (or Gradle 8.5 command line equivalent).
+- **ML Models**: The PyTorch model weights are managed securely using Google Drive and initialized automatically during CI/CD.
 
-*   **Android**: Android Studio Hedgehog or later, JDK 17.
-*   **iOS**: Xcode 15+, CocoaPods (`pod install`), macOS.
-*   **Models**: Download the PyTorch Lite models `.ptl` into the respective assets/resources directories before building.
-
-### Installation (Android)
-
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/zrdimr/vibree.git
-    cd vibree
-    ```
-2.  Open the `android/` project in Android Studio.
-3.  Download ML models (done automatically via GitHub Actions, or manually via `gdown`).
-4.  Sync Gradle and run on a physical Android device (min SDK 24).
-
-### Building
-
-To build the Android APK from the command line:
-
+### Building iOS (Simulator & Device)
 ```bash
-cd android
-./gradlew assembleDebug
+git clone https://github.com/zrdimr/vibree.git
+cd vibree/ios/Vibree
+xcodegen generate
+pod install
+```
+Open `Vibree.xcworkspace`, verify signing identities, and run on any M-series Apple Silicon simulator via integrated Rosetta abstractions.
+
+### Building Android
+```bash
+cd vibree/android
+./gradlew :app:assembleDebug
 ```
 
-For release:
-```bash
-./gradlew assembleRelease
-```
+## 🔄 CI/CD Pipelines
+Vibree leverages powerful GitHub action runners to perform rigorous build steps and automated binary compilations:
+- Automates `.ipa` generation for sideload-ready generic unsigned testing.
+- Automates standalone `app-release.apk` compilations.
+- Injects `.ptl` deep-learning binaries directly into `Assets/` / `Resources/` boundaries at initialization.
 
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to submit pull requests, report issues, and suggest improvements.
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 📄 License
+Copyright (c) 2026. All Rights Reserved. Not explicitly licensed for open distribution without author consent.

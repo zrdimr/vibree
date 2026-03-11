@@ -3,6 +3,8 @@ name: "Build iOS app"
 on:
   push:
     branches: [ "main", "master" ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
@@ -112,4 +114,13 @@ jobs:
           name: Vibree-Unsigned-IPA
           path: ios/Vibree/Vibree-unsigned.ipa
           retention-days: 7
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ios/Vibree/Vibree-unsigned.ipa
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
 

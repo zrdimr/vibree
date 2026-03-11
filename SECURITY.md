@@ -1,19 +1,26 @@
 # Security Policy
 
+At Vibree, we take the security of our wearable application, deep-learning models, and user data extremely seriously. We are committed to protecting the privacy of the personal and physiological data collected by this repository.
+
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+We only provide security updates and patches for the current major release version.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
+| v1.0.x  | :white_check_mark: |
 | < 1.0   | :x:                |
 
 ## Reporting a Vulnerability
 
-We take security seriously. If you discover a security vulnerability within Vibree, please do NOT create a public GitHub issue.
+If you discover any security vulnerabilities in this project, particularly weaknesses regarding:
+- Improper Edge AI data isolation boundaries.
+- Wearable API extraction endpoints.
+- Unencrypted CoreData or Room database handling.
 
-Instead, please send an email to security@example.com (Replace with actual email).
+Please do **NOT** report it by creating a public GitHub issue. Instead, send an email privately to the project maintainer. 
 
-We will verify the issue and get back to you.
+We will acknowledge your email within 48 hours, and you will receive a more detailed response outlining the next steps in reproducing, triaging, and mitigating the vulnerability. Once the issue is resolved, we will publish a patch alongside a security advisory if community users need to take action.
+
+**Important Data Handling Principles:**
+Vibree is fundamentally an **Edge AI** platform. Under absolutely no circumstance should raw Natural Language Processing inputs ("Tempat Curhat" journals) or biometrics be transmitted off-device to unverified cloud hosts. The `MobileBERT` implementation is designed to keep all text inference securely offline. Any PR breaking this air-gap architecture will be rejected.
