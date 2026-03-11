@@ -32,5 +32,9 @@ targets:
         OTHER_CPLUSPLUSFLAGS:
           - $(inherited)
           - "-std=c++17"
+        OTHER_SWIFT_FLAGS:
+          - $(inherited)
+          - "-Xcc"
+          - "-std=c++17"
         GCC_PREPROCESSOR_DEFINITIONS: 
           - $(inherited)
