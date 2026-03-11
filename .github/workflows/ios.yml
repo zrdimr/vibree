@@ -13,6 +13,8 @@ jobs:
   build:
     name: Build Vibree
     runs-on: macos-15
+    permissions:
+      contents: write
     steps:
       - name: check Xcode version
         run: /usr/bin/xcodebuild -version
@@ -65,6 +67,8 @@ jobs:
   build_unsigned_ipa:
     name: Build Unsigned IPA for Device Testing
     runs-on: macos-15
+    permissions:
+      contents: write
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
